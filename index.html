@@ -16,7 +16,7 @@
         h1 { color: #00ff88; margin-bottom: 5px; }
         .subtitle { color: #888; font-size: 1.2rem; margin-top: 0; margin-bottom: 30px; }
         
-        /* Twitch-Button */
+        /* Twitch Stream Button */
         .twitch-btn {
             display: inline-block;
             background: #9146FF;
@@ -35,7 +35,7 @@
             box-shadow: 0 0 25px rgba(145, 70, 255, 0.6);
         }
 
-        /* Formular Container */
+        /* Container für Login und Formular */
         .setup-container {
             max-width: 500px;
             margin: 0 auto;
@@ -51,6 +51,56 @@
             color: #00ff88;
             border-bottom: 1px solid #333;
             padding-bottom: 10px;
+        }
+
+        /* Social Login Buttons */
+        .login-section {
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 1px dashed #333;
+        }
+        .login-title {
+            font-size: 0.9rem;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .social-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+            color: #fff;
+        }
+        .social-btn:hover { transform: translateY(-1px); opacity: 0.9; }
+        
+        .btn-twitch { background: #9146FF; }
+        .btn-google { background: #ea4335; }
+        .btn-apple { background: #000; border: 1px solid #444; }
+        .btn-email { background: #2b2b2b; border: 1px solid #444; }
+        .btn-full { grid-column: span 2; }
+        
+        /* Formular Zustand: Gesperrt vor Login */
+        .form-locked {
+            opacity: 0.3;
+            pointer-events: none;
+            user-select: none;
+            position: relative;
         }
         
         /* Eingabefelder */
@@ -106,74 +156,40 @@
     
     <a href="https://twitch.tv/Trinoo" target="_blank" class="twitch-btn">👾 Besuche den Stream</a>
 
-    <!-- Hier startet das neue Setup-Formular -->
     <div class="setup-container">
-        <h2>Dein PC-Setup eintragen</h2>
+        <h2>Setup einreichen</h2>
         
-        <form onsubmit="alert('Setup abgeschickt! (Datenbank-Anbindung folgt im nächsten Level 😉)'); return false;">
+        <!-- NEU: Die zeitgemäße Login-Sektion -->
+        <div class="login-section">
+            <div class="login-title">Zuerst sicher anmelden:</div>
+            <div class="social-grid">
+                <button class="social-btn btn-twitch" onclick="alert('Verbindung mit Twitch wird hergestellt... 👾')">👾 Twitch</button>
+                <button class="social-btn btn-google" onclick="alert('Verbindung mit Google/Gmail wird hergestellt... ✉️')">📬 Gmail</button>
+                <button class="social-btn btn-apple" onclick="alert('Verbindung mit Apple ID wird hergestellt... 🍏')">🍏 Apple ID</button>
+                <button class="social-btn btn-email" onclick="alert('Klassischer E-Mail Login öffnet sich... 📝')">📝 E-Mail</button>
+            </div>
+        </div>
+        
+        <!-- Das Formular ist aktuell ausgegraut (locked), bis man eingeloggt ist -->
+        <div class="form-locked">
             <div class="form-group">
                 <label for="prozessor">Prozessor (CPU)</label>
-                <input type="text" id="prozessor" placeholder="z.B. AMD Ryzen 7 7800X3D oder Intel Core i9">
+                <input type="text" id="prozessor" placeholder="z.B. AMD Ryzen 7 7800X3D" disabled>
             </div>
             
             <div class="form-group">
                 <label for="grafikkarte">Grafikkarte (GPU)</label>
-                <input type="text" id="grafikkarte" placeholder="z.B. NVIDIA RTX 4080 Super / RX 7900 XTX">
+                <input type="text" id="grafikkarte" placeholder="z.B. NVIDIA RTX 4080 Super" disabled>
             </div>
             
             <div class="form-group">
                 <label for="ram">Arbeitsspeicher (RAM)</label>
-                <input type="text" id="ram" placeholder="z.B. 32GB DDR5 6000MHz">
+                <input type="text" id="ram" placeholder="z.B. 32GB DDR5" disabled>
             </div>
             
-            <div class="form-group">
-                <label for="netzteil">Netzteil (PSU)</label>
-                <input type="text" id="netzteil" placeholder="z.B. 850W be quiet! Straight Power 12">
-            </div>
-            
-            <button type="submit" class="submit-btn">Setup jetzt teilen 🚀</button>
-        </form>
+            <button type="submit" class="submit-btn" disabled>Bitte zuerst anmelden 🔒</button>
+        </div>
     </div>
 
-</body>
-</html><!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Twitch.tv/Trinoo | PC-Setups</title>
-    <style>
-        body { background: #111; color: #fff; font-family: sans-serif; text-align: center; padding-top: 50px; }
-        h1 { color: #00ff88; margin-bottom: 5px; }
-        .subtitle { color: #888; font-size: 1.2rem; margin-top: 0; margin-bottom: 30px; }
-        
-        /* Stylischer Twitch-Button */
-        .twitch-btn {
-            display: inline-block;
-            background: #9146FF;
-            color: white;
-            text-decoration: none;
-            padding: 12px 24px;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: all 0.2s ease;
-            box-shadow: 0 0 15px rgba(145, 70, 255, 0.4);
-        }
-        .twitch-btn:hover {
-            background: #772ce8;
-            transform: translateY(-2px);
-            box-shadow: 0 0 25px rgba(145, 70, 255, 0.7);
-        }
-    </style>
-</head>
-<body>
-    <h1>Twitch.tv/Trinoo</h1>
-    <p class="subtitle">Community-Projekt</p>
-    
-    <p>Hier entsteht die ultimative Plattform zum Teilen, Kalkulieren und Bewerten von PC-Setups!</p>
-    
-    <br><br>
-    <!-- Hier ist dein neuer Community-Magnet -->
-    <a href="https://twitch.tv/Trinoo" target="_blank" class="twitch-btn">👾 Besuche den Stream</a>
 </body>
 </html>
