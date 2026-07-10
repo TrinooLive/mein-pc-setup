@@ -229,9 +229,9 @@
         const SUPABASE_URL = "https://dvttzclfrfufhjqdyswu.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_2gQmO2ZUVTIio65mbh7Muw_P4OkyA7K";
         
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // FIX: Variable umbenannt, damit die Bibliothek nicht gecrasht wird
+        const dbClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Test-Bypass Login: Schaltet das Formular sofort lokal frei
         function testLogin() {
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('userStatus').style.display = 'block';
@@ -249,8 +249,7 @@
             const gpu = document.getElementById('grafikkarte').value;
             const ram = document.getElementById('ram').value;
 
-            // Schießt die Daten direkt in deine Tabelle 'setups'
-            const { data, error } = await supabase.from('setups').insert([
+            const { data, error } = await dbClient.from('setups').insert([
                 { cpu: cpu, gpu: gpu, ram: ram }
             ]);
 
