@@ -73,7 +73,7 @@
         }
         .social-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 10px;
             margin-bottom: 10px;
         }
@@ -94,9 +94,6 @@
         .social-btn:hover { transform: translateY(-1px); opacity: 0.9; }
         
         .btn-twitch { background: #9146FF; }
-        .btn-google { background: #ea4335; }
-        .btn-apple { background: #000; border: 1px solid #444; }
-        .btn-email { background: #2b2b2b; border: 1px solid #444; }
         
         /* User Status Anzeige */
         .user-status {
@@ -104,10 +101,10 @@
             background: #252525;
             padding: 12px;
             border-radius: 5px;
-            border: 1px solid #9146FF;
+            border: 1px solid #00ff88;
             color: #fff;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
             text-align: center;
         }
         .logout-btn {
@@ -122,7 +119,7 @@
 
         /* Formular Bereich */
         .form-area {
-            opacity: 0.3;
+            opacity: 0.2;
             pointer-events: none;
             user-select: none;
             transition: opacity 0.3s ease;
@@ -191,18 +188,15 @@
         
         <!-- Login Sektion -->
         <div class="login-section" id="loginSection">
-            <div class="login-title">Zuerst sicher anmelden:</div>
+            <div class="login-title">Zuerst anmelden (Testmodus):</div>
             <div class="social-grid">
-                <button class="social-btn btn-twitch" onclick="loginMitTwitch()">👾 Twitch</button>
-                <button class="social-btn btn-google" onclick="alert('Gmail-Anbindung folgt!')">📬 Gmail</button>
-                <button class="social-btn btn-apple" onclick="alert('Apple ID-Anbindung folgt!')">🍏 Apple ID</button>
-                <button class="social-btn btn-email" onclick="alert('E-Mail-Anbindung folgt!')">📝 E-Mail</button>
+                <button class="social-btn btn-twitch" onclick="testLogin()">👾 Mit Twitch einloggen (Test-Bypass)</button>
             </div>
         </div>
 
         <!-- Status-Anzeige nach dem Login -->
         <div class="user-status" id="userStatus">
-            🟢 Eingeloggt als: <span id="username" style="color: #a970ff;">Trinoo</span>
+            🟢 Als Tester eingeloggt: <span id="username" style="color: #00ff88;">Zuschauer</span>
             <br>
             <button class="logout-btn" onclick="logout()">[ Abmelden ]</button>
         </div>
@@ -230,47 +224,24 @@
         </div>
     </div>
 
-    <!-- ECHTE DATENBANK-LOGIK -->
+    <!-- DATENBANK-LOGIK -->
     <script>
-        // Echte Projekt-Daten erfolgreich von der Engine eingepflegt:
         const SUPABASE_URL = "https://dvttzclfrfufhjqdyswu.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_2gQmO2ZUVTIio65mbh7Muw_P4OkyA7K";
         
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Prüfen, ob eine Session aktiv ist
-        window.onload = async function() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                zeigeEingeloggtenUser(session.user);
-            }
-        };
-
-        async function loginMitTwitch() {
-            const { data, error } = await supabase.auth.signInWithOAuth({
-                provider: 'twitch',
-                options: {
-                    redirectTo: window.location.origin
-                }
-            });
-            if (error) alert("Fehler beim Login: " + error.message);
-        }
-
-        async function logout() {
-            await supabase.auth.signOut();
-            document.getElementById('loginSection').style.display = 'block';
-            document.getElementById('userStatus').style.display = 'none';
-            document.getElementById('formArea').classList.remove('unlocked');
-        }
-
-        function zeigeEingeloggtenUser(user) {
+        // Test-Bypass Login: Schaltet das Formular sofort lokal frei
+        function testLogin() {
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('userStatus').style.display = 'block';
             document.getElementById('formArea').classList.add('unlocked');
-            
-            // Holt den Twitch-Usernamen aus den Metadaten
-            const twitchName = user.user_metadata.full_name || user.email;
-            document.getElementById('username').innerText = twitchName;
+        }
+
+        function logout() {
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('userStatus').style.display = 'none';
+            document.getElementById('formArea').classList.remove('unlocked');
         }
 
         async function setupAbschicken() {
@@ -278,7 +249,7 @@
             const gpu = document.getElementById('grafikkarte').value;
             const ram = document.getElementById('ram').value;
 
-            // Schießt die Daten in deine Tabelle 'setups'
+            // Schießt die Daten direkt in deine Tabelle 'setups'
             const { data, error } = await supabase.from('setups').insert([
                 { cpu: cpu, gpu: gpu, ram: ram }
             ]);
