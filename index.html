@@ -93,14 +93,31 @@
         .btn-google { background: #ea4335; }
         .btn-apple { background: #000; border: 1px solid #444; }
         .btn-email { background: #2b2b2b; border: 1px solid #444; }
-        .btn-full { grid-column: span 2; }
         
-        /* Formular Zustand: Gesperrt vor Login */
-        .form-locked {
+        /* User Status Anzeige */
+        .user-status {
+            display: none;
+            background: #252525;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #9146FF;
+            color: #fff;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        /* Formular Bereich */
+        .form-area {
             opacity: 0.3;
             pointer-events: none;
             user-select: none;
-            position: relative;
+            transition: opacity 0.3s ease;
+        }
+        .form-area.unlocked {
+            opacity: 1;
+            pointer-events: auto;
+            user-select: auto;
         }
         
         /* Eingabefelder */
@@ -159,37 +176,67 @@
     <div class="setup-container">
         <h2>Setup einreichen</h2>
         
-        <!-- NEU: Die zeitgemäße Login-Sektion -->
-        <div class="login-section">
+        <!-- Login Sektion -->
+        <div class="login-section" id="loginSection">
             <div class="login-title">Zuerst sicher anmelden:</div>
             <div class="social-grid">
-                <button class="social-btn btn-twitch" onclick="alert('Verbindung mit Twitch wird hergestellt... 👾')">👾 Twitch</button>
-                <button class="social-btn btn-google" onclick="alert('Verbindung mit Google/Gmail wird hergestellt... ✉️')">📬 Gmail</button>
-                <button class="social-btn btn-apple" onclick="alert('Verbindung mit Apple ID wird hergestellt... 🍏')">🍏 Apple ID</button>
-                <button class="social-btn btn-email" onclick="alert('Klassischer E-Mail Login öffnet sich... 📝')">📝 E-Mail</button>
+                <button class="social-btn btn-twitch" onclick="loginMitTwitch()">👾 Twitch</button>
+                <button class="social-btn btn-google" onclick="alert('Google folgt!')">📬 Gmail</button>
+                <button class="social-btn btn-apple" onclick="alert('Apple folgt!')">🍏 Apple ID</button>
+                <button class="social-btn btn-email" onclick="alert('E-Mail folgt!')">📝 E-Mail</button>
             </div>
+        </div>
+
+        <!-- Status-Anzeige nach dem Login -->
+        <div class="user-status" id="userStatus">
+            🟢 Eingeloggt als: <span id="username" style="color: #a970ff;">TrinooLive</span>
         </div>
         
-        <!-- Das Formular ist aktuell ausgegraut (locked), bis man eingeloggt ist -->
-        <div class="form-locked">
-            <div class="form-group">
-                <label for="prozessor">Prozessor (CPU)</label>
-                <input type="text" id="prozessor" placeholder="z.B. AMD Ryzen 7 7800X3D" disabled>
-            </div>
-            
-            <div class="form-group">
-                <label for="grafikkarte">Grafikkarte (GPU)</label>
-                <input type="text" id="grafikkarte" placeholder="z.B. NVIDIA RTX 4080 Super" disabled>
-            </div>
-            
-            <div class="form-group">
-                <label for="ram">Arbeitsspeicher (RAM)</label>
-                <input type="text" id="ram" placeholder="z.B. 32GB DDR5" disabled>
-            </div>
-            
-            <button type="submit" class="submit-btn" disabled>Bitte zuerst anmelden 🔒</button>
+        <!-- Formular Bereich (wird per JavaScript freigeschaltet) -->
+        <div class="form-area" id="formArea">
+            <form onsubmit="setupAbschicken(); return false;">
+                <div class="form-group">
+                    <label for="prozessor">Prozessor (CPU)</label>
+                    <input type="text" id="prozessor" placeholder="z.B. AMD Ryzen 7 7800X3D" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="grafikkarte">Grafikkarte (GPU)</label>
+                    <input type="text" id="grafikkarte" placeholder="z.B. NVIDIA RTX 4080 Super" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ram">Arbeitsspeicher (RAM)</label>
+                    <input type="text" id="ram" placeholder="z.B. 32GB DDR5" required>
+                </div>
+                
+                <button type="submit" class="submit-btn" id="submitBtn">Setup abschicken 🚀</button>
+            </form>
         </div>
     </div>
+
+    <!-- HIER IST DIE LOGIK (JAVASCRIPT) -->
+    <script>
+        function loginMitTwitch() {
+            // Wir simulieren die Weiterleitung und den Login
+            alert("Simuliere Twitch-Login... Schnittstelle antwortet: ERFOLGREICH! 🎉");
+            
+            // Login-Knöpfe ausblenden
+            document.getElementById('loginSection').style.display = 'none';
+            
+            // Status-Anzeige einblenden
+            document.getElementById('userStatus').style.display = 'block';
+            
+            // Formular freischalten (Klasse entfernen, die es ausgraut)
+            document.getElementById('formArea').classList.add('unlocked');
+        }
+
+        function setupAbschicken() {
+            const cpu = document.getElementById('prozessor').value;
+            const gpu = document.getElementById('grafikkarte').value;
+            alert(`Starkes Ding! Dein Setup (${cpu} + ${gpu}) wurde verarbeitet. Im nächsten Level speichern wir das dauerhaft in einer Datenbank!`);
+        }
+    </script>
 
 </body>
 </html>
