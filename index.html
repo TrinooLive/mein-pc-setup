@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Twitch.tv/Trinoo | PC-Setups</title>
     
-    <!-- Supabase JS Library von CDN geladen -->
+    <!-- Supabase JS Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
@@ -232,21 +232,14 @@
 
     <!-- ECHTE DATENBANK-LOGIK -->
     <script>
-        // Diese beiden Werte holen wir uns gleich aus dem Supabase Dashboard!
-        const SUPABASE_URL = "DEIN_SUPABASE_URL_PLATZHALTER";
-        const SUPABASE_ANON_KEY = "DEIN_SUPABASE_KEY_PLATZHALTER";
+        // Echte Projekt-Daten erfolgreich von der Engine eingepflegt:
+        const SUPABASE_URL = "https://dvttzclfrfufhjqdyswu.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_2gQmO2ZUVTIio65mbh7Muw_P4OkyA7K";
         
-        let supabase = null;
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Initialisiere Supabase nur, wenn die Keys eingetragen sind
-        if (SUPABASE_URL !== "DEIN_SUPABASE_URL_PLATZHALTER") {
-            supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        }
-
-        // Prüfen, ob der User bereits eingeloggt ist (wichtig nach einem Seiten-Reload)
+        // Prüfen, ob eine Session aktiv ist
         window.onload = async function() {
-            if (!supabase) return;
-            
             const { data: { session } } = await supabase.auth.getSession();
             if (session) {
                 zeigeEingeloggtenUser(session.user);
@@ -254,31 +247,17 @@
         };
 
         async function loginMitTwitch() {
-            if (!supabase) {
-                // Fallback, solange die DB noch nicht verknüpft ist
-                alert("Code-Infrastruktur steht! Jetzt müssen wir die Datenbank im Dashboard erstellen, um den echten Twitch-Login freizuschalten.");
-                document.getElementById('loginSection').style.display = 'none';
-                document.getElementById('userStatus').style.display = 'block';
-                document.getElementById('formArea').classList.add('unlocked');
-                return;
-            }
-
-            // Der echte Login-Befehl für Supabase + Twitch OAuth
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'twitch',
                 options: {
                     redirectTo: window.location.origin
                 }
             });
-            
             if (error) alert("Fehler beim Login: " + error.message);
         }
 
         async function logout() {
-            if (supabase) {
-                await supabase.auth.signOut();
-            }
-            // Interface wieder zurücksetzen
+            await supabase.auth.signOut();
             document.getElementById('loginSection').style.display = 'block';
             document.getElementById('userStatus').style.display = 'none';
             document.getElementById('formArea').classList.remove('unlocked');
@@ -289,7 +268,7 @@
             document.getElementById('userStatus').style.display = 'block';
             document.getElementById('formArea').classList.add('unlocked');
             
-            // Holt den Twitch-Usernamen aus den Metadaten des Logins
+            // Holt den Twitch-Usernamen aus den Metadaten
             const twitchName = user.user_metadata.full_name || user.email;
             document.getElementById('username').innerText = twitchName;
         }
@@ -299,12 +278,7 @@
             const gpu = document.getElementById('grafikkarte').value;
             const ram = document.getElementById('ram').value;
 
-            if (!supabase) {
-                alert(`Demo-Modus: Setup (${cpu} + ${gpu}) abgeschickt! Sobald die DB läuft, fliegt das direkt in die Cloud.`);
-                return;
-            }
-
-            // Daten echt in die Postgres-Tabelle 'setups' schießen
+            // Schießt die Daten in deine Tabelle 'setups'
             const { data, error } = await supabase.from('setups').insert([
                 { cpu: cpu, gpu: gpu, ram: ram }
             ]);
@@ -312,7 +286,7 @@
             if (error) {
                 alert("Fehler beim Speichern: " + error.message);
             } else {
-                alert("Boom! Dein Setup wurde bombensicher in der Postgres-Datenbank gespeichert! 🖥️🔥");
+                alert("Boom! Dein Setup wurde bombensicher in deiner Postgres-Datenbank gespeichert! 🖥️🔥");
                 document.getElementById('prozessor').value = '';
                 document.getElementById('grafikkarte').value = '';
                 document.getElementById('ram').value = '';
