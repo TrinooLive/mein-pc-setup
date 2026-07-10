@@ -187,12 +187,12 @@
             </div>
         </div>
 
-        <!-- Status-Anzeige nach dem Login -->
+        <!-- Status-Anzeige nach dem Login (jetzt korrigiert auf Trinoo) -->
         <div class="user-status" id="userStatus">
-            🟢 Eingeloggt als: <span id="username" style="color: #a970ff;">TrinooLive</span>
+            🟢 Eingeloggt als: <span id="username" style="color: #a970ff;">Trinoo</span>
         </div>
         
-        <!-- Formular Bereich (wird per JavaScript freigeschaltet) -->
+        <!-- Formular Bereich -->
         <div class="form-area" id="formArea">
             <form onsubmit="setupAbschicken(); return false;">
                 <div class="form-group">
@@ -215,26 +215,19 @@
         </div>
     </div>
 
-    <!-- HIER IST DIE LOGIK (JAVASCRIPT) -->
+    <!-- JAVASCRIPT LOGIK -->
     <script>
         function loginMitTwitch() {
-            // Wir simulieren die Weiterleitung und den Login
             alert("Simuliere Twitch-Login... Schnittstelle antwortet: ERFOLGREICH! 🎉");
-            
-            // Login-Knöpfe ausblenden
             document.getElementById('loginSection').style.display = 'none';
-            
-            // Status-Anzeige einblenden
             document.getElementById('userStatus').style.display = 'block';
-            
-            // Formular freischalten (Klasse entfernen, die es ausgraut)
             document.getElementById('formArea').classList.add('unlocked');
         }
 
         function setupAbschicken() {
             const cpu = document.getElementById('prozessor').value;
             const gpu = document.getElementById('grafikkarte').value;
-            alert(`Starkes Ding! Dein Setup (${cpu} + ${gpu}) wurde verarbeitet. Im nächsten Level speichern wir das dauerhaft in einer Datenbank!`);
+            alert(`Starkes Ding, Trinoo! Dein Setup (${cpu} + ${gpu}) wurde verarbeitet. Im nächsten Level speichern wir das dauerhaft in einer Datenbank!`);
         }
     </script>
 
