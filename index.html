@@ -1,20 +1,52 @@
-// Ersetze dein aktuelles <a href="..."> durch diesen Button mit onclick-Funktion:
-<button onclick="loginWithProvider('twitch')" class="btn-twitch">
-    Mit Twitch anmelden
-</button>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trinoo Setups - Login</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --bg-color: #0b0e14;
+            --card-bg: #151a22;
+            --text-color: #ffffff;
+            --twitch: #9146ff;
+            --border-color: #2c364c;
+        }
+        body { font-family: sans-serif; background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .login-container { background-color: var(--card-bg); padding: 40px; border-radius: 12px; width: 100%; max-width: 400px; border: 1px solid var(--border-color); text-align: center; }
+        .btn-twitch { cursor: pointer; display: block; width: 100%; padding: 12px; margin-bottom: 20px; background-color: var(--twitch); color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 16px; transition: opacity 0.2s; }
+        .btn-twitch:hover { opacity: 0.9; }
+    </style>
+</head>
+<body>
 
-<script>
-    async function loginWithProvider(provider) {
-        const { data, error } = await supabaseClient.auth.signInWithOAuth({
-            provider: provider,
-            options: {
-                redirectTo: "https://mein-pc-setup.vercel.app",
-                // WICHTIG: Das hier steuert das Fenster-Verhalten
-                // 'pkce' leitet auf der gleichen Seite weiter, 
-                // 'implicit' erzwingt meistens ein Popup-Fenster
-                flowType: 'implicit' 
+    <div class="login-container">
+        <h1>Anmelden</h1>
+        <button onclick="loginWithProvider('twitch')" class="btn-twitch">
+            Mit Twitch anmelden
+        </button>
+    </div>
+
+    <script>
+        const supabase = supabase.createClient(
+            "https://dvttzclfrfufhjqdyswu.supabase.co", 
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR2dHR6Y2xmcmZ1ZmhqcWR5c3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEzNzMxNjIsImV4cCI6MjA2Njk0OTE2Mn0.zC6iW72r4i3yvO03A0C8-555"
+        );
+
+        async function loginWithProvider(provider) {
+            const { data, error } = await supabase.auth.signInWithOAuth({
+                provider: provider,
+                options: {
+                    redirectTo: "https://mein-pc-setup.vercel.app",
+                    flowType: 'implicit'
+                }
+            });
+            if (error) {
+                console.error("Login Fehler:", error.message);
+                alert("Login Fehler: " + error.message);
             }
-        });
-        if (error) console.error(error);
-    }
-</script>
+        }
+    </script>
+</body>
+</html>
