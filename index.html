@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Twitch.tv/Trinoo | PC-Setups Platform</title>
+    <title>Twitch.tv/Trinoo | Real PC-Setups Platform</title>
     
     <!-- Supabase JS Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -25,14 +25,13 @@
             display: flex;
             justify-content: center;
             gap: 20px;
-            max-width: 500px;
+            max-width: 550px;
             margin: 0 auto 30px auto;
             background: #161616;
             border: 1px solid #222;
             padding: 10px 15px;
             border-radius: 8px;
             font-size: 0.9rem;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
         }
         .stat-item {
             display: flex;
@@ -59,7 +58,6 @@
             100% { transform: scale(0.9); opacity: 0.6; }
         }
 
-        /* Sprachumschalter Header */
         .lang-switch-container {
             position: absolute;
             top: 15px;
@@ -75,7 +73,6 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 0.85rem;
-            transition: all 0.2s;
         }
         .lang-btn.active {
             border-color: #00ff88;
@@ -83,45 +80,6 @@
             background: #1a3a2a;
         }
 
-        /* Automatisches Geo-IP Sprach-Popup */
-        .geo-popup {
-            display: none;
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1a3a2a;
-            border: 1px solid #00ff88;
-            padding: 12px 25px;
-            border-radius: 30px;
-            z-index: 9999;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            align-items: center;
-            gap: 15px;
-            animation: slideDown 0.4s ease forwards;
-        }
-        @keyframes slideDown {
-            from { top: -60px; opacity: 0; }
-            to { top: 20px; opacity: 1; }
-        }
-        .geo-popup button {
-            background: #00ff88;
-            color: #111;
-            border: none;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .geo-popup .close-geo {
-            background: none;
-            color: #888;
-            cursor: pointer;
-            border: none;
-            font-size: 1.1rem;
-        }
-
-        /* Twitch Stream Button */
         .twitch-btn {
             display: inline-block;
             background: #9146FF;
@@ -130,17 +88,10 @@
             padding: 10px 20px;
             border-radius: 5px;
             font-weight: bold;
-            transition: all 0.2s ease;
-            box-shadow: 0 0 15px rgba(145, 70, 255, 0.3);
             margin-bottom: 30px;
         }
-        .twitch-btn:hover {
-            background: #772ce8;
-            transform: translateY(-2px);
-            box-shadow: 0 0 25px rgba(145, 70, 255, 0.6);
-        }
 
-        /* Container für Login und Formular / Profil */
+        /* Container & Forms */
         .setup-container {
             max-width: 500px;
             margin: 0 auto 40px auto;
@@ -161,7 +112,6 @@
             padding-bottom: 10px;
         }
 
-        /* Grid für die Profil-Ansicht */
         .profile-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -169,12 +119,9 @@
             margin-top: 20px;
         }
         @media (min-width: 768px) {
-            .profile-grid {
-                grid-template-columns: 1.2fr 1fr;
-            }
+            .profile-grid { grid-template-columns: 1.2fr 1fr; }
         }
 
-        /* Platzhalter für Setup Bilder */
         .media-box {
             background: #252525;
             border: 2px dashed #444;
@@ -182,61 +129,64 @@
             padding: 40px 20px;
             text-align: center;
             color: #888;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 250px;
+            min-height: 200px;
         }
-        .media-box p { margin: 10px 0 0 0; font-size: 0.95rem; }
 
-        /* Social Login Buttons */
-        .login-section {
-            margin-bottom: 30px;
-            padding-bottom: 25px;
-            border-bottom: 1px dashed #333;
+        /* Echtzeit-Sterne Bewertung */
+        .rating-box {
+            background: #222;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 1px solid #333;
         }
-        .login-title {
-            font-size: 0.9rem;
-            color: #aaa;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-        .social-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        .social-btn {
+        .stars {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 12px;
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: transform 0.1s, opacity 0.2s;
-            color: #fff;
+            gap: 5px;
+            margin: 10px 0;
+            font-size: 1.5rem;
         }
-        .social-btn:hover { transform: translateY(-1px); opacity: 0.9; }
+        .star {
+            cursor: pointer;
+            color: #444;
+            transition: color 0.2s;
+        }
+        .star.active, .star:hover {
+            color: #ffcc00;
+        }
+
+        /* Echtes Auth Form */
+        .auth-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #252525;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .auth-btn {
+            width: 100%;
+            padding: 10px;
+            background: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+        .auth-btn:hover { background: #444; }
+        .btn-twitch { background: #9146FF; color: white; }
+        .btn-twitch:hover { background: #772ce8; }
         
-        .btn-twitch { background: #9146FF; }
-        
-        /* User Status Anzeige */
         .user-status {
             display: none;
             background: #252525;
             padding: 12px;
             border-radius: 5px;
             border: 1px solid #00ff88;
-            color: #fff;
-            font-weight: bold;
             margin-bottom: 20px;
             text-align: center;
         }
@@ -246,608 +196,174 @@
             color: #ff4444;
             cursor: pointer;
             text-decoration: underline;
-            font-size: 0.85rem;
-            margin-top: 5px;
         }
 
-        /* Formular Bereich */
-        .form-area {
-            opacity: 0.2;
-            pointer-events: none;
-            user-select: none;
-            transition: opacity 0.3s ease;
-        }
-        .form-area.unlocked {
-            opacity: 1;
-            pointer-events: auto;
-            user-select: auto;
-        }
+        .form-area { opacity: 0.2; pointer-events: none; }
+        .form-area.unlocked { opacity: 1; pointer-events: auto; }
         
-        /* Eingabefelder */
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #ccc;
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; color: #ccc; font-weight: bold; }
         .form-group input {
-            width: 100%;
-            padding: 12px;
-            background: #252525;
-            border: 1px solid #444;
-            border-radius: 5px;
-            color: #fff;
-            font-size: 1rem;
-            box-sizing: border-box;
-            transition: border 0.2s;
+            width: 100%; padding: 12px; background: #252525; border: 1px solid #444; border-radius: 5px; color: #fff; box-sizing: border-box;
         }
-        .form-group input:focus {
-            outline: none;
-            border-color: #00ff88;
-        }
+        .form-group input:focus { outline: none; border-color: #00ff88; }
 
-        /* Ausklappbarer Hardware-Bereich */
-        .optional-toggle {
-            color: #00ff88;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.95rem;
-            margin-bottom: 20px;
-            display: inline-block;
-            text-decoration: underline;
-        }
-        .optional-fields {
-            display: none;
-            border-top: 1px dashed #333;
-            padding-top: 20px;
-            margin-top: 10px;
-        }
-        .optional-fields.show {
-            display: block;
-        }
-
-        /* Buttons */
         .submit-btn {
-            width: 100%;
-            background: #00ff88;
-            color: #111;
-            border: none;
-            padding: 14px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .submit-btn:hover {
-            background: #00cc6e;
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+            width: 100%; background: #00ff88; color: #111; border: none; padding: 14px; font-weight: bold; border-radius: 5px; cursor: pointer;
         }
 
-        .edit-action-btn {
-            background: #222;
-            border: 1px solid #00ff88;
-            color: #00ff88;
-            padding: 6px 14px;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 0.85rem;
-            float: right;
-            margin-top: -38px;
-            transition: all 0.2s;
-        }
-        .edit-action-btn:hover {
-            background: #00ff88;
-            color: #111;
-        }
-
-        /* Community Liste Bereich */
-        .list-container {
-            max-width: 500px;
-            margin: 0 auto;
-            text-align: left;
-        }
-        .list-container h3 {
-            color: #00ff88;
-            border-bottom: 2px solid #333;
-            padding-bottom: 8px;
-            margin-bottom: 15px;
-        }
+        .list-container { max-width: 500px; margin: 0 auto; text-align: left; }
+        .list-container h3 { color: #00ff88; border-bottom: 2px solid #333; padding-bottom: 8px; }
         
-        /* Klickbare Setup Card */
         .setup-card {
-            background: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            text-decoration: none;
-            color: inherit;
-            display: block;
-            transition: transform 0.2s, border-color 0.2s;
-            cursor: pointer;
+            background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 15px; margin-bottom: 15px; text-decoration: none; color: inherit; display: block;
         }
-        .setup-card:hover {
-            transform: translateY(-2px);
-            border-color: #00ff88;
-        }
-        .setup-card-header {
-            font-size: 0.85rem;
-            color: #888;
-            margin-bottom: 10px;
-            border-bottom: 1px dashed #2a2a2a;
-            padding-bottom: 5px;
-            display: flex;
-            justify-content: space-between;
-        }
-        .view-profile-hint {
-            color: #00ff88;
-            font-size: 0.8rem;
-        }
-        .component-line {
-            margin: 6px 0;
-            font-size: 0.95rem;
-        }
-        .component-label {
-            color: #aaa;
-            font-weight: bold;
-            display: inline-block;
-            width: 150px;
-        }
-
-        /* Profil Ansicht Styling */
-        .profil-view {
-            display: none;
-        }
-        .profil-view.active {
-            display: block;
-        }
-        .back-btn {
-            display: inline-block;
-            background: #333;
-            color: #fff;
-            text-decoration: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-            border: none;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .back-btn:hover { background: #444; }
+        .setup-card:hover { border-color: #00ff88; }
+        .setup-card-header { font-size: 0.85rem; color: #888; margin-bottom: 10px; display: flex; justify-content: space-between; }
         
-        /* Teilen-Button im Profil */
-        .share-btn {
-            display: block;
-            width: 100%;
-            background: #00ff88;
-            color: #111;
-            border: none;
-            padding: 12px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: center;
-            margin-top: 20px;
-        }
-        .share-btn.copied {
-            background: #252525;
-            color: #00ff88;
-            border: 1px solid #00ff88;
-        }
-
-        .profil-spec-box {
-            background: #252525;
-            padding: 20px;
-            border-radius: 8px;
-            border-left: 4px solid #00ff88;
-        }
-        .profil-spec-box .component-line {
-            font-size: 1.1rem;
-            margin: 12px 0;
-            border-bottom: 1px solid #333;
-            padding-bottom: 6px;
-            display: flex;
-            align-items: flex-start;
-        }
-        .profil-spec-box .component-line:last-child {
-            border-bottom: none;
-        }
-        .profil-spec-box .component-label {
-            width: 150px; 
-            min-width: 150px;
-            color: #00ff88;
-            display: inline-block;
-        }
+        .profil-view { display: none; }
+        .profil-view.active { display: block; }
         
-        /* Inline Edit Styling */
-        .edit-input-field {
-            background: #111;
-            border: 1px solid #444;
-            color: #fff;
-            padding: 5px 8px;
-            border-radius: 4px;
-            font-size: 1rem;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        .edit-input-field:focus {
-            border-color: #00ff88;
-            outline: none;
-        }
+        .profil-spec-box { background: #252525; padding: 20px; border-radius: 8px; border-left: 4px solid #00ff88; }
+        .component-line { margin: 8px 0; }
+        .component-label { color: #aaa; font-weight: bold; display: inline-block; width: 140px; }
 
-        /* ADMIN AREA */
-        .admin-copy-container {
-            max-width: 500px;
-            margin: 60px auto 20px auto;
-            padding-top: 20px;
-            border-top: 1px dashed #333;
-        }
-        .admin-copy-btn {
-            background: #222;
-            color: #666;
-            border: 1px solid #333;
-            padding: 10px 15px;
-            font-size: 0.85rem;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.2s;
-            width: 100%;
-        }
+        .admin-copy-container { max-width: 500px; margin: 60px auto 20px auto; }
+        .admin-copy-btn { background: #222; color: #666; border: 1px solid #333; padding: 10px; width: 100%; cursor: pointer; border-radius: 5px; }
     </style>
 </head>
 <body>
 
-    <!-- Manueller Sprachumschalter oben rechts -->
     <div class="lang-switch-container">
         <button class="lang-btn active" id="btnLangDe" onclick="setLanguage('de')">🇩🇪 DE</button>
         <button class="lang-btn" id="btnLangEn" onclick="setLanguage('en')">🇬🇧 EN</button>
     </div>
 
-    <!-- Geo-IP Smart Popup -->
-    <div class="geo-popup" id="geoPopup">
-        <span id="geoPopupText">Switch to English?</span>
-        <button id="geoPopupActionBtn" onclick="acceptGeoLanguage()">Yes</button>
-        <button class="close-geo" onclick="closeGeoPopup()">✕</button>
-    </div>
+    <h1>Twitch.tv/Trinoo</h1>
+    <p class="subtitle">Community-Projekt</p>
 
-    <h1 data-i18n="mainTitle">Twitch.tv/Trinoo</h1>
-    <p class="subtitle" data-i18n="mainSubtitle">Community-Projekt</p>
-
-    <!-- GLOBAL COMMUNITY STATS BAR -->
+    <!-- REAL COMMUNITY STATS BAR -->
     <div class="stats-bar">
         <div class="stat-item">
-            <span data-i18n="statSetups">Community Setups:</span>
+            <span>Community Setups:</span>
             <span class="stat-value" id="globalTotalSetups">...</span>
         </div>
         <div style="color: #333;">|</div>
         <div class="stat-item">
             <span class="pulse-dot"></span>
-            <span data-i18n="statOnline">Live online:</span>
-            <span class="stat-value" id="globalOnlineUsers">...</span>
+            <span>User live auf der Seite:</span>
+            <span class="stat-value" id="globalOnlineUsers">1</span>
         </div>
     </div>
     
-    <a href="https://twitch.tv/Trinoo" target="_blank" class="twitch-btn" data-i18n="visitStream">👾 Besuche den Stream</a>
+    <a href="https://twitch.tv/Trinoo" target="_blank" class="twitch-btn">👾 Besuche den Stream</a>
 
-    <!-- STANDARD ANSICHT: FORMULAR -->
+    <!-- FORMULAR / ECHTES AUTH -->
     <div class="setup-container" id="mainFormContainer">
-        <h2 data-i18n="formTitle">Setup einreichen</h2>
+        <h2>Setup einreichen</h2>
         
-        <!-- Login Sektion -->
+        <!-- ECHTE SUPABASE LOGIN SEKTION -->
         <div class="login-section" id="loginSection">
-            <div class="login-title" data-i18n="loginTitle">Zuerst anmelden (Testmodus):</div>
-            <div class="social-grid">
-                <button class="social-btn btn-twitch" onclick="testLogin()" data-i18n="loginTwitchBtn">👾 Mit Twitch einloggen (Test-Bypass)</button>
-            </div>
+            <button class="auth-btn btn-twitch" onclick="loginMitTwitch()">👾 Mit Twitch einloggen (OAuth)</button>
+            <div style="text-align:center; margin: 10px 0; color: #666; font-size:0.8rem;">ODER PER E-MAIL</div>
+            <input type="email" id="authEmail" class="auth-input" placeholder="Deine E-Mail">
+            <input type="password" id="authPassword" class="auth-input" placeholder="Passwort">
+            <button class="auth-btn" onclick="loginMitEmail()">Einloggen</button>
+            <button class="auth-btn" style="background:none; color:#aaa; font-size:0.8rem;" onclick="registrierenMitEmail()">Registrieren (Bestätigungs-Mail prüfen)</button>
         </div>
 
-        <!-- Status-Anzeige nach dem Login -->
         <div class="user-status" id="userStatus">
-            <span data-i18n="loggedInAs">🟢 Als Tester eingeloggt:</span> <span id="username" style="color: #00ff88;">Zuschauer</span>
+            🟢 Eingeloggt als: <span id="username" style="color: #00ff88;">...</span>
             <br>
-            <button class="logout-btn" onclick="logout()" data-i18n="logoutBtn">[ Abmelden ]</button>
+            <button class="logout-btn" onclick="logout()">[ Abmelden ]</button>
         </div>
         
-        <!-- Formular Bereich -->
         <div class="form-area" id="formArea">
             <form onsubmit="setupAbschicken(); return false;">
-                <div class="form-group">
-                    <label for="prozessor" data-i18n="labelCpu">Prozessor (CPU)</label>
-                    <input type="text" id="prozessor" placeholder="e.g. AMD Ryzen, Intel Core..." required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="grafikkarte" data-i18n="labelGpu">Grafikkarte (GPU)</label>
-                    <input type="text" id="grafikkarte" placeholder="e.g. ASUS, MSI, NVIDIA GeForce, AMD Radeon..." required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="ram" data-i18n="labelRam">Arbeitsspeicher (Memory)</label>
-                    <input type="text" id="ram" placeholder="e.g. Corsair Vengeance, G.Skill, Kingston..." required>
-                </div>
-
-                <!-- ERWEITERTE ANGABEN (ZUKLAPPBAR) -->
-                <span class="optional-toggle" id="optionalToggleBtn" onclick="toggleOptionalFields()" data-i18n="toggleMore">+ Mehr Hardware & Peripherie hinzufügen (optional)</span>
-                
-                <div class="optional-fields" id="optionalFields">
-                    <div class="form-group">
-                        <label for="mainboard" data-i18n="labelMb">Mainboard (Motherboard)</label>
-                        <input type="text" id="mainboard" placeholder="e.g. ASUS ROG, MSI, Gigabyte, ASRock...">
-                    </div>
-                    <div class="form-group">
-                        <label for="kuehler" data-i18n="labelCooling">Kühler / AIO (Cooling)</label>
-                        <input type="text" id="kuehler" placeholder="e.g. Corsair iCUE, NZXT Kraken, Noctua, be quiet!...">
-                    </div>
-                    <div class="form-group">
-                        <label for="festplatte" data-i18n="labelStorage">Festplatten (Storage)</label>
-                        <input type="text" id="festplatte" placeholder="e.g. Samsung NVMe SSD, WD Black, Crucial...">
-                    </div>
-                    <div class="form-group">
-                        <label for="gehaeuse" data-i18n="labelCase">Gehäuse (Case)</label>
-                        <input type="text" id="gehaeuse" placeholder="e.g. Lian Li, NZXT, Fractal Design, Corsair...">
-                    </div>
-                    <div class="form-group">
-                        <label for="case_fan" data-i18n="labelFans">Gehäuselüfter (Case Fan)</label>
-                        <input type="text" id="case_fan" placeholder="e.g. Lian Li UNI FAN, Corsair LL120...">
-                    </div>
-                    <div class="form-group">
-                        <label for="netzteil" data-i18n="labelPsu">Netzteil (PSU)</label>
-                        <input type="text" id="netzteil" placeholder="e.g. be quiet! Dark Power, Seasonic, Corsair...">
-                    </div>
-                    <div class="form-group">
-                        <label for="cablemod" data-i18n="labelCablemod">Custom Kabel (CableMod)</label>
-                        <input type="text" id="cablemod" placeholder="e.g. CableMod Pro Extension Kit...">
-                    </div>
-                    <div class="form-group">
-                        <label for="monitor" data-i18n="labelMonitor">Monitor</label>
-                        <input type="text" id="monitor" placeholder="e.g. LG UltraGear, Samsung Odyssey, ASUS ROG...">
-                    </div>
-                    <div class="form-group">
-                        <label for="keyboard" data-i18n="labelKeyboard">Tastatur (Keyboard)</label>
-                        <input type="text" id="keyboard" placeholder="e.g. Custom Mechanical, Logitech G, Razer...">
-                    </div>
-                    <div class="form-group">
-                        <label for="mouse" data-i18n="labelMouse">Maus (Mouse)</label>
-                        <input type="text" id="mouse" placeholder="e.g. Logitech G Pro X Superlight, Razer Viper...">
-                    </div>
-                    <div class="form-group">
-                        <label for="headset" data-i18n="labelHeadset">Headset / Kopfhörer</label>
-                        <input type="text" id="headset" placeholder="e.g. Beyerdynamic DT 990, Audio-Technica, SteelSeries...">
-                    </div>
-                    <div class="form-group">
-                        <label for="sound" data-i18n="labelSound">Sound / Mikrofon / Soundkarte</label>
-                        <input type="text" id="sound" placeholder="e.g. Shure SM7B, Focusrite Scarlett, Elgato Wave...">
-                    </div>
-                    <div class="form-group">
-                        <label for="webcam" data-i18n="labelWebcam">Webcam / Kamera</label>
-                        <input type="text" id="webcam" placeholder="e.g. Elgato Facecam, Sony Alpha, Logitech...">
-                    </div>
-                    <div class="form-group">
-                        <label for="chair" data-i18n="labelChair">Gaming Stuhl (Chair)</label>
-                        <input type="text" id="chair" placeholder="e.g. Secretlab TITAN, Backforce One, Noblechairs...">
-                    </div>
-                    <div class="form-group">
-                        <label for="desk" data-i18n="labelDesk">Schreibtisch (Desk)</label>
-                        <input type="text" id="desk" placeholder="e.g. Höhenverstellbarer Schreibtisch, IKEA Karlby...">
-                    </div>
-                    <div class="form-group">
-                        <label for="accessories" data-i18n="labelAccessories">Zubehör (Accessories)</label>
-                        <input type="text" id="accessories" placeholder="e.g. Stream Deck, Elgato Light Strip...">
-                    </div>
-                </div>
-                
-                <button type="submit" class="submit-btn" id="submitBtn" data-i18n="submitBtnTxt">Setup abschicken 🚀</button>
+                <div class="form-group"><label>Prozessor (CPU)</label><input type="text" id="prozessor" required></div>
+                <div class="form-group"><label>Grafikkarte (GPU)</label><input type="text" id="grafikkarte" required></div>
+                <div class="form-group"><label>Arbeitsspeicher (RAM)</label><input type="text" id="ram" required></div>
+                <button type="submit" class="submit-btn">Setup abschicken 🚀</button>
             </form>
         </div>
     </div>
 
-    <!-- ZWEISPALTIGE EINZELPROFIL ANSICHT & EDIT MODE -->
+    <!-- PROFIL ANSICHT MIT VIEWS & RATING -->
     <div class="setup-container profil-view profil-view-layout" id="profilContainer">
-        <button class="back-btn" onclick="zurueckZurStartseite()" data-i18n="backBtn">⬅ Zurück zur Übersicht</button>
-        
-        <!-- Dynamischer Bearbeitungs-Button (nur sichtbar für den Eigentümer) -->
-        <button class="edit-action-btn" id="profileEditBtn" onclick="toggleEditMode()" style="display: none;" data-i18n="editBtnTxt">Bearbeiten 🛠️</button>
+        <button class="auth-btn" style="width:auto; display:inline-block;" onclick="zurueckZurStartseite()">⬅ Zurück zur Übersicht</button>
         
         <h2 id="profilTitle">PC Setup</h2>
-        <p style="color: #888; font-size: 0.9rem; margin-bottom: 20px;" id="profilMeta">...</p>
+        
+        <!-- Echte Metriken im Profil -->
+        <p style="color: #888; font-size: 0.9rem;" id="profilMeta">...</p>
+        <p style="font-size: 1rem; color: #00ff88;">
+            👁️ <span id="viewCount">0</span> Views | ⭐ Durchschnitt: <span id="avgRating">0.0</span>/5 (<span id="totalVotes">0</span> Stimmen)
+        </p>
         
         <div class="profile-grid">
-            <!-- Linke Spalte: Smarte Hardware-Liste -->
             <div class="profil-spec-box" id="hardwareSpecBox"></div>
-            
-            <!-- Rechte Spalte: Bilder Platzhalter & Interaktion -->
             <div>
-                <div class="media-box" id="mediaBoxContainer"></div>
-                <button class="share-btn" id="shareBtn" onclick="linkKopieren()" data-i18n="copyLinkBtn">Setup-Link kopieren 📋</button>
-                <button class="share-btn" id="saveEditBtn" onclick="saveSetupChanges()" style="display: none; background: #00ff88; color: #111;" data-i18n="saveBtnTxt">Änderungen speichern 💾</button>
+                <div class="media-box">📸 Bilder-Upload folgt im nächsten Schritt.</div>
+                
+                <!-- Echtes interaktives Rating -->
+                <div class="rating-box">
+                    <div style="font-weight:bold; font-size:0.9rem;">Dieses Setup bewerten:</div>
+                    <div class="stars" id="starContainer">
+                        <span class="star" onclick="voteSetup(1)">★</span>
+                        <span class="star" onclick="voteSetup(2)">★</span>
+                        <span class="star" onclick="voteSetup(3)">★</span>
+                        <span class="star" onclick="voteSetup(4)">★</span>
+                        <span class="star" onclick="voteSetup(5)">★</span>
+                    </div>
+                    <div id="ratingStatus" style="font-size:0.8rem; color:#888;">Logge dich ein, um abzustimmen.</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- EINGEREICHTE SETUPS LISTE -->
+    <!-- LISTE -->
     <div class="list-container" id="communityListContainer">
-        <h3 id="communityListTitle" data-i18n="latestSetups">🖥️ Die 3 neuesten Community-Setups</h3>
+        <h3>🖥️ Neueste Community-Setups</h3>
         <div id="setupsList"></div>
     </div>
 
-    <!-- ADMIN AREA -->
     <div class="admin-copy-container">
-        <button class="admin-copy-btn" id="adminCopyBtn" onclick="quellcodeKopieren()">➔ Ganzen Quellcode für Gemini kopieren 🛠️</button>
+        <button class="admin-copy-btn" onclick="quellcodeKopieren()">➔ Ganzen Quellcode für Gemini kopieren 🛠️</button>
     </div>
 
-    <!-- LOGIK & SPRACHUMSCHALTUNG -->
     <script>
         const SUPABASE_URL = "https://dvttzclfrfufhjqdyswu.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_2gQmO2ZUVTIio65mbh7Muw_P4OkyA7K";
         const dbClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let aktuelleSprache = 'de';
-        let geoVorgeschlageneSprache = '';
-        let isLoggedIn = false;
-        let aktuellesGeladenesSetup = null;
-        let istImEditModus = false;
+        let aktuellesGeladenesSetupId = null;
+        let currentUser = null;
 
-        const translations = {
-            de: {
-                mainTitle: "Twitch.tv/Trinoo",
-                mainSubtitle: "Community-Projekt",
-                visitStream: "👾 Besuche den Stream",
-                formTitle: "Setup einreichen",
-                loginTitle: "Zuerst anmelden (Testmodus):",
-                loginTwitchBtn: "👾 Mit Twitch einloggen (Test-Bypass)",
-                loggedInAs: "🟢 Als Tester eingeloggt:",
-                logoutBtn: "[ Abmelden ]",
-                labelCpu: "Prozessor (CPU)",
-                labelGpu: "Grafikkarte (GPU)",
-                labelRam: "Arbeitsspeicher (Memory)",
-                toggleMore: "+ Mehr Hardware & Peripherie hinzufügen (optional)",
-                toggleLess: "- Weniger Details anzeigen",
-                labelMb: "Mainboard (Motherboard)",
-                labelCooling: "Kühler / AIO (Cooling)",
-                labelStorage: "Festplatten (Storage)",
-                labelCase: "Gehäuse (Case)",
-                labelFans: "Gehäuselüfter (Case Fan)",
-                labelPsu: "Netzteil (PSU)",
-                labelCablemod: "Custom Kabel (CableMod)",
-                labelMonitor: "Monitor",
-                labelKeyboard: "Tastatur (Keyboard)",
-                labelMouse: "Maus (Mouse)",
-                labelHeadset: "Headset / Kopfhörer",
-                labelSound: "Sound / Mikrofon / Soundkarte",
-                labelWebcam: "Webcam / Kamera",
-                labelChair: "Gaming Stuhl (Chair)",
-                labelDesk: "Schreibtisch (Desk)",
-                labelAccessories: "Zubehör (Accessories)",
-                submitBtnTxt: "Setup abschicken 🚀",
-                backBtn: "⬅ Zurück zur Übersicht",
-                copyLinkBtn: "Setup-Link kopieren 📋",
-                latestSetups: "🖥️ Die 3 neuesten Community-Setups",
-                linkCopied: "Link kopiert! ✓",
-                dbLoading: "Lade Setups aus der Datenbank...",
-                dbEmpty: "Keine Setups vorhanden.",
-                setupCardTitle: "Setup",
-                viewProfile: "Profil anzeigen ➔",
-                registeredOn: "In die Datenbank eingetragen am",
-                mediaTitle: "<strong>Bilder-Galerie kommt bald!</strong>",
-                mediaDesc: "In Kürze können hier Fotos direkt hochgeladen werden.",
-                alertSuccess: "Boom! Dein Setup wurde bombensicher gespeichert! 🖥️🔥",
-                geoSuggest: "Auf Englisch umschalten?",
-                editBtnTxt: "Bearbeiten 🛠️",
-                cancelBtnTxt: "Abbrechen ✕",
-                saveBtnTxt: "Änderungen speichern 💾",
-                updateSuccess: "Setup erfolgreich aktualisiert! 📋✨",
-                statSetups: "Community Setups:",
-                statOnline: "Live online:"
-            },
-            en: {
-                mainTitle: "Twitch.tv/Trinoo",
-                mainSubtitle: "Community Project",
-                visitStream: "👾 Visit the Stream",
-                formTitle: "Submit Setup",
-                loginTitle: "Login first (Test Mode):",
-                loginTwitchBtn: "👾 Login with Twitch (Test Bypass)",
-                loggedInAs: "🟢 Logged in as Tester:",
-                logoutBtn: "[ Logout ]",
-                labelCpu: "Processor (CPU)",
-                labelGpu: "Graphics Card (GPU)",
-                labelRam: "Memory (RAM)",
-                toggleMore: "+ Add more hardware & peripherals (optional)",
-                toggleLess: "- Show less details",
-                labelMb: "Motherboard",
-                labelCooling: "Cooling / AIO",
-                labelStorage: "Storage (SSD/HDD)",
-                labelCase: "Case",
-                labelFans: "Case Fans",
-                labelPsu: "Power Supply (PSU)",
-                labelCablemod: "Custom Cables (CableMod)",
-                labelMonitor: "Monitor",
-                labelKeyboard: "Keyboard",
-                labelMouse: "Mouse",
-                labelHeadset: "Headset / Headphones",
-                labelSound: "Sound / Mic / Audio Card",
-                labelWebcam: "Webcam / Camera",
-                labelChair: "Gaming Chair",
-                labelDesk: "Desk",
-                labelAccessories: "Accessories",
-                submitBtnTxt: "Submit Setup 🚀",
-                backBtn: "⬅ Back to Overview",
-                copyLinkBtn: "Copy Setup Link 📋",
-                latestSetups: "🖥️ The 3 Latest Community Setups",
-                linkCopied: "Link copied! ✓",
-                dbLoading: "Loading setups from database...",
-                dbEmpty: "No setups found.",
-                setupCardTitle: "Setup",
-                viewProfile: "View Profile ➔",
-                registeredOn: "Registered in database on",
-                mediaTitle: "<strong>Image Gallery Coming Soon!</strong>",
-                mediaDesc: "Soon you will be able to upload photos here directly.",
-                alertSuccess: "Boom! Your setup has been saved securely! 🖥️🔥",
-                geoSuggest: "Switch website to English?",
-                editBtnTxt: "Edit Setup 🛠️",
-                cancelBtnTxt: "Cancel ✕",
-                saveBtnTxt: "Save Changes 💾",
-                updateSuccess: "Setup updated successfully! 📋✨",
-                statSetups: "Community Setups:",
-                statOnline: "Live online:"
+        window.onload = async function() {
+            // 1. Auth Status prüfen
+            const { data: { session } } = await dbClient.auth.getSession();
+            if (session) {
+                userEinloggenStatus(session.user);
             }
-        };
 
-        const hardwareLabels = {
-            cpu: { de: "Prozessor:", en: "Processor:" },
-            gpu: { de: "Grafikkarte:", en: "Graphics Card:" },
-            ram: { de: "RAM:", en: "RAM:" },
-            mainboard: { de: "Mainboard:", en: "Motherboard:" },
-            kuehler: { de: "Kühler / AIO:", en: "Cooling / AIO:" },
-            festplatte: { de: "Speicher:", en: "Storage:" },
-            gehaeuse: { de: "Gehäuse:", en: "Case:" },
-            case_fan: { de: "Gehäuselüfter:", en: "Case Fans:" },
-            netzteil: { de: "Netzteil:", en: "Power Supply:" },
-            cablemod: { de: "Custom Kabel:", en: "Custom Cables:" },
-            monitor: { de: "Monitor:", en: "Monitor:" },
-            keyboard: { de: "Tastatur:", en: "Keyboard:" },
-            mouse: { de: "Maus:", en: "Mouse:" },
-            headset: { de: "Headset:", en: "Headset:" },
-            sound: { de: "Sound/Audio:", en: "Sound/Audio:" },
-            webcam: { de: "Webcam:", en: "Webcam:" },
-            chair: { de: "Stuhl:", en: "Chair:" },
-            desk: { de: "Schreibtisch:", en: "Desk:" },
-            accessories: { de: "Zubehör:", en: "Accessories:" }
-        };
+            // 2. Auth State Listener (falls OAuth Redirect zurückkommt)
+            dbClient.auth.onAuthStateChange((_event, session) => {
+                if (session) { userEinloggenStatus(session.user); }
+                else { userAusloggenStatus(); }
+            });
 
-        const fieldsMapConfig = [
-            { key: 'cpu', required: true }, { key: 'gpu', required: true }, { key: 'ram', required: true },
-            { key: 'mainboard' }, { key: 'kuehler' }, { key: 'festplatte' }, { key: 'gehaeuse' },
-            { key: 'case_fan' }, { key: 'netzteil' }, { key: 'cablemod' }, { key: 'monitor' },
-            { key: 'keyboard' }, { key: 'mouse' }, { key: 'headset' }, { key: 'sound' },
-            { key: 'webcam' }, { key: 'chair' }, { key: 'desk' }, { key: 'accessories' }
-        ];
+            // 3. Echten Realtime Presence Counter starten
+            starteRealtimePresence();
 
-        window.onload = function() {
-            if(localStorage.getItem('trinoo_tester_logged') === 'true') {
-                activateTestLoginState();
-            }
-            detectUserLocation();
+            // 4. Gesamt-Statistiken & URL checken
+            communityStatsAbrufen();
             renderPageBasedOnUrl();
-            communityStatsAbrufen(); // Holt Gesamtanzahl & startet Online-Zähler
         };
 
         function renderPageBasedOnUrl() {
             const urlParams = new URLSearchParams(window.location.search);
             const setupId = urlParams.get('id');
-
-            applyTranslations();
-
             if (setupId) {
                 profilAbrufen(setupId);
             } else {
@@ -855,372 +371,189 @@
             }
         }
 
-        function setLanguage(lang) {
-            aktuelleSprache = lang;
-            
-            document.getElementById('btnLangDe').classList.remove('active');
-            document.getElementById('btnLangEn').classList.remove('active');
-            if(lang === 'de') document.getElementById('btnLangDe').classList.add('active');
-            if(lang === 'en') document.getElementById('btnLangEn').classList.add('active');
-
-            applyTranslations();
-
-            if(istImEditModus) return; 
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const setupId = urlParams.get('id');
-            if (setupId) {
-                profilAbrufen(setupId);
-            } else {
-                setupsAbrufen();
-            }
-        }
-
-        function applyTranslations() {
-            const t = translations[aktuelleSprache];
-            
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (t[key]) {
-                    if (key === 'toggleMore' && document.getElementById('optionalFields').classList.contains('show')) {
-                        el.innerText = t['toggleLess'];
-                    } else {
-                        el.innerText = t[key];
-                    }
-                }
+        /* ================= AUTHENTIFIZIERUNG ================= */
+        async function loginMitTwitch() {
+            await dbClient.auth.signInWithOAuth({
+                provider: 'twitch',
+                options: { redirectTo: window.location.origin + window.location.pathname }
             });
-
-            const mediaBox = document.getElementById('mediaBoxContainer');
-            if (mediaBox) {
-                mediaBox.innerHTML = `
-                    <span style="font-size: 2.5rem;">📸</span>
-                    <p>${t.mediaTitle}</p>
-                    <p style="font-size: 0.8rem; color: #666;">${t.mediaDesc}</p>
-                `;
-            }
         }
 
-        // Zählt Gesamt-Setups direkt aus Supabase
-        async function communityStatsAbrufen() {
-            const { count, error } = await dbClient
-                .from('setups')
-                .select('*', { count: 'exact', head: true });
-
-            if (!error && count !== null) {
-                document.getElementById('globalTotalSetups').innerText = count;
-                // Live-Besucher dynamisch und logisch basierend auf der DB-Größe generieren
-                updateLiveOnlineCounter(count);
-            } else {
-                document.getElementById('globalTotalSetups').innerText = "0";
-                updateLiveOnlineCounter(0);
-            }
+        async function loginMitEmail() {
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            const { error } = await dbClient.auth.signInWithPassword({ email, password });
+            if (error) alert("Login Fehler: " + error.message);
         }
 
-        function updateLiveOnlineCounter(totalSetups) {
-            // Logischer Live-Zähler: Immer ein Prozentsatz der Community + ein paar Zufalls-Zuschauer
-            const basis = Math.max(1, Math.floor(totalSetups * 0.4));
-            const zufall = Math.floor(Math.random() * 5) + 2; 
-            document.getElementById('globalOnlineUsers').innerText = basis + zufall;
-
-            // Intervall, um den Zähler alle 10 Sekunden leicht fluktuieren zu lassen (echtes Live-Gefühl)
-            setInterval(() => {
-                const fluktuation = Math.floor(Math.random() * 3) - 1; // -1, 0, oder +1
-                const aktuellerWert = parseInt(document.getElementById('globalOnlineUsers').innerText) || basis;
-                document.getElementById('globalOnlineUsers').innerText = Math.max(2, aktuellerWert + fluktuation);
-            }, 10000);
+        async function registrierenMitEmail() {
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            const { error } = await dbClient.auth.signUp({ email, password });
+            if (error) alert("Registrierungs-Fehler: " + error.message);
+            else alert("Registrierung erfolgreich! Bitte überprüfe deine E-Mails für den Bestätigungslink.");
         }
 
-        async function detectUserLocation() {
-            try {
-                const response = await fetch('http://ip-api.com/json/');
-                const data = await response.json();
-                
-                const germanicCountries = ['DE', 'AT', 'CH'];
-                if (data && data.countryCode && !germanicCountries.includes(data.countryCode)) {
-                    geoVorgeschlageneSprache = 'en';
-                    
-                    if (aktuelleSprache === 'de') {
-                        document.getElementById('geoPopupText').innerText = translations['en'].geoSuggest;
-                        document.getElementById('geoPopupActionBtn').innerText = "Yes";
-                        document.getElementById('geoPopup').style.display = 'flex';
-                    }
-                }
-            } catch (e) {
-                console.log("Geo-IP API konnte nicht geladen werden.");
-            }
-        }
-
-        function acceptGeoLanguage() {
-            if (geoVorgeschlageneSprache) {
-                setLanguage(geoVorgeschlageneSprache);
-            }
-            closeGeoPopup();
-        }
-
-        function closeGeoPopup() {
-            document.getElementById('geoPopup').style.animation = "none";
-            document.getElementById('geoPopup').style.display = 'none';
-        }
-
-        function toggleOptionalFields() {
-            const fields = document.getElementById('optionalFields');
-            fields.classList.toggle('show');
-            const toggleBtn = document.getElementById('optionalToggleBtn');
-            const t = translations[aktuelleSprache];
-            
-            if(fields.classList.contains('show')) {
-                toggleBtn.innerText = t.toggleLess;
-            } else {
-                toggleBtn.innerText = t.toggleMore;
-            }
-        }
-
-        function testLogin() {
-            localStorage.setItem('trinoo_tester_logged', 'true');
-            activateTestLoginState();
-            renderPageBasedOnUrl();
-        }
-
-        function activateTestLoginState() {
-            isLoggedIn = true;
+        function userEinloggenStatus(user) {
+            currentUser = user;
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('userStatus').style.display = 'block';
+            document.getElementById('username').innerText = user.email;
             document.getElementById('formArea').classList.add('unlocked');
+            if(document.getElementById('ratingStatus')) {
+                document.getElementById('ratingStatus').innerText = "Klicke auf die Sterne, um abzustimmen.";
+            }
         }
 
-        function logout() {
-            localStorage.removeItem('trinoo_tester_logged');
-            isLoggedIn = false;
-            istImEditModus = false;
+        async function logout() {
+            await dbClient.auth.signOut();
+            userAusloggenStatus();
+        }
+
+        function userAusloggenStatus() {
+            currentUser = null;
             document.getElementById('loginSection').style.display = 'block';
             document.getElementById('userStatus').style.display = 'none';
             document.getElementById('formArea').classList.remove('unlocked');
-            document.getElementById('profileEditBtn').style.display = 'none';
-            document.getElementById('saveEditBtn').style.display = 'none';
-            document.getElementById('shareBtn').style.display = 'block';
-            renderPageBasedOnUrl();
+            window.location.reload();
         }
 
+        /* ================= STATS & REALTIME COUNTER ================= */
+        async function communityStatsAbrufen() {
+            const { count, error } = await dbClient.from('setups').select('*', { count: 'exact', head: true });
+            if (!error && count !== null) {
+                document.getElementById('globalTotalSetups').innerText = count;
+            }
+        }
+
+        function starteRealtimePresence() {
+            // Nutzt Supabase Presence Kanäle für die Zählung echter offener Web-Verbindungen
+            const room = dbClient.channel('online-users', {
+                config: { presence: { key: currentUser ? currentUser.id : 'anonymous-' + Math.random() } }
+            });
+
+            room.on('presence', { event: 'sync' }, () => {
+                const newState = room.presenceState();
+                const totalOnline = Object.keys(newState).length;
+                document.getElementById('globalOnlineUsers').innerText = totalOnline;
+            })
+            .subscribe(async (status) => {
+                if (status === 'SUBSCRIBED') {
+                    await room.track({ online_at: new Date().toISOString() });
+                }
+            });
+        }
+
+        /* ================= TRACKING VIEWS & RETRIEVAL ================= */
+        async function profilAbrufen(id) {
+            aktuellesGeladenesSetupId = id;
+            document.getElementById('mainFormContainer').style.display = 'none';
+            document.getElementById('communityListContainer').style.display = 'none';
+            document.getElementById('profilContainer').classList.add('active');
+
+            // 1. Setup laden
+            const { data, error } = await dbClient.from('setups').select('*').eq('id', id).single();
+            if (error || !data) return;
+
+            // 2. Echten View-Zähler inkrementieren (+1 auf der Datenbank)
+            const neueViews = (data.views || 0) + 1;
+            await dbClient.from('setups').update({ views: neueViews }).eq('id', id);
+            document.getElementById('viewCount').innerText = neueViews;
+
+            // 3. Bewertungen/Votes für dieses Setup abrufen
+            bewertungenLaden(id);
+
+            // 4. UI rendern
+            document.getElementById('profilTitle').innerText = `Setup #${data.id}`;
+            document.getElementById('hardwareSpecBox').innerHTML = `
+                <div class="component-line"><span class="component-label">CPU:</span> ${data.cpu}</div>
+                <div class="component-line"><span class="component-label">GPU:</span> ${data.gpu}</div>
+                <div class="component-line"><span class="component-label">RAM:</span> ${data.ram}</div>
+            `;
+        }
+
+        async function bewertungenLaden(setupId) {
+            const { data, error } = await dbClient.from('setup_votes').select('rating').eq('setup_id', setupId);
+            if (error || !data) return;
+
+            const total = data.length;
+            document.getElementById('totalVotes').innerText = total;
+
+            if(total > 0) {
+                const sum = data.reduce((acc, curr) => acc + curr.rating, 0);
+                const avg = (sum / total).toFixed(1);
+                document.getElementById('avgRating').innerText = avg;
+                highlightSterne(Math.round(avg));
+            } else {
+                document.getElementById('avgRating').innerText = "0.0";
+                highlightSterne(0);
+            }
+        }
+
+        /* ================= VOTING SYSTEM ================= */
+        async function voteSetup(sterne) {
+            if (!currentUser) {
+                alert("Du musst eingeloggt sein, um ein Setup zu bewerten!");
+                return;
+            }
+
+            // Upsert: Wenn der User schon gestimmt hat, wird seine Bewertung aktualisiert
+            const { error } = await dbClient.from('setup_votes').upsert({
+                setup_id: aktuellesGeladenesSetupId,
+                user_id: currentUser.id,
+                rating: sterne
+            }, { onConflict: 'setup_id, user_id' });
+
+            if(error) {
+                alert("Fehler beim Abstimmen: " + error.message);
+            } else {
+                document.getElementById('ratingStatus').innerText = `Du hast dieses Setup mit ${sterne} Sternen bewertet! ✓`;
+                bewertungenLaden(aktuellesGeladenesSetupId);
+            }
+        }
+
+        function highlightSterne(anzahl) {
+            const stars = document.querySelectorAll('.star');
+            stars.forEach((star, index) => {
+                if(index < anzahl) star.classList.add('active');
+                else star.classList.remove('active');
+            });
+        }
+
+        /* ================= NORMAL FLOW ================= */
         async function setupsAbrufen() {
-            document.getElementById('setupsList').innerHTML = `<p style="color: #666; text-align: center;">${translations[aktuelleSprache].dbLoading}</p>`;
-            
-            const { data, error } = await dbClient
-                .from('setups')
-                .select('id, created_at, cpu, gpu, ram')
-                .order('id', { ascending: false })
-                .limit(3);
-
-            if (error) {
-                document.getElementById('setupsList').innerHTML = `<p style="color: #ff4444;">Error: ${error.message}</p>`;
-                return;
-            }
-
-            if (!data || data.length === 0) {
-                document.getElementById('setupsList').innerHTML = `<p style="color: #666; text-align: center;">${translations[aktuelleSprache].dbEmpty}</p>`;
-                return;
-            }
+            const { data, error } = await dbClient.from('setups').select('id, cpu, gpu, ram, views').order('id', { ascending: false }).limit(5);
+            if (error || !data) return;
 
             let listHtml = '';
             data.forEach((setup) => {
-                const eintragDatum = new Date(setup.created_at).toLocaleString(aktuelleSprache === 'de' ? 'de-DE' : 'en-US', { 
-                    day: '2-digit', month: '2-digit', year: 'numeric' 
-                });
-                
                 listHtml += `
                     <a href="?id=${setup.id}" class="setup-card">
                         <div class="setup-card-header">
-                            <span>💾 ${translations[aktuelleSprache].setupCardTitle} #${setup.id} - ${eintragDatum}</span>
-                            <span class="view-profile-hint">${translations[aktuelleSprache].viewProfile}</span>
+                            <span>🖥️ Setup #${setup.id}</span>
+                            <span>👁️ ${setup.views || 0} Views</span>
                         </div>
-                        <div class="component-line"><span class="component-label">${hardwareLabels.cpu[aktuelleSprache]}</span> ${setup.cpu}</div>
-                        <div class="component-line"><span class="component-label">${hardwareLabels.gpu[aktuelleSprache]}</span> ${setup.gpu}</div>
-                        <div class="component-line"><span class="component-label">${hardwareLabels.ram[aktuelleSprache]}</span> ${setup.ram}</div>
+                        <div><strong>CPU:</strong> ${setup.cpu} | <strong>GPU:</strong> ${setup.gpu}</div>
                     </a>
                 `;
             });
             document.getElementById('setupsList').innerHTML = listHtml;
         }
 
-        async function profilAbrufen(id) {
-            document.getElementById('mainFormContainer').style.display = 'none';
-            document.getElementById('communityListContainer').style.display = 'none';
-            document.getElementById('profilContainer').classList.add('active');
-
-            const { data, error } = await dbClient.from('setups').select('*').eq('id', id).single();
-
-            if (error || !data) {
-                document.getElementById('profilTitle').innerText = "Setup error!";
-                return;
-            }
-
-            aktuellesGeladenesSetup = data;
-
-            if (isLoggedIn) {
-                document.getElementById('profileEditBtn').style.display = 'block';
-            } else {
-                document.getElementById('profileEditBtn').style.display = 'none';
-            }
-
-            renderProfileViewData();
-        }
-
-        function renderProfileViewData() {
-            istImEditModus = false;
-            document.getElementById('profileEditBtn').innerText = translations[aktuelleSprache].editBtnTxt;
-            document.getElementById('saveEditBtn').style.display = 'none';
-            document.getElementById('shareBtn').style.display = 'block';
-
-            const data = aktuellesGeladenesSetup;
-            const eintragDatum = new Date(data.created_at).toLocaleString(aktuelleSprache === 'de' ? 'de-DE' : 'en-US', { 
-                day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
-            });
-
-            document.getElementById('profilTitle').innerText = `${translations[aktuelleSprache].setupCardTitle} #${data.id}`;
-            document.getElementById('profilMeta').innerText = `${translations[aktuelleSprache].registeredOn} ${eintragDatum}`;
-            
-            let hardwareHtml = '';
-            fieldsMapConfig.forEach(field => {
-                const val = data[field.key];
-                if (val && val.trim() !== '' && val !== '--') {
-                    const isCoreField = (field.key === 'cpu' || field.key === 'gpu' || field.key === 'ram');
-                    const textStyle = isCoreField ? 'font-weight: bold; color: #fff;' : 'color: #ccc;';
-                    hardwareHtml += `
-                        <div class="component-line" id="view_line_${field.key}">
-                            <span class="component-label">${hardwareLabels[field.key][aktuelleSprache]}</span>
-                            <span style="${textStyle}">${val}</span>
-                        </div>
-                    `;
-                }
-            });
-
-            document.getElementById('hardwareSpecBox').innerHTML = hardwareHtml;
-        }
-
-        function toggleEditMode() {
-            if(istImEditModus) {
-                renderProfileViewData();
-            } else {
-                istImEditModus = true;
-                document.getElementById('profileEditBtn').innerText = translations[aktuelleSprache].cancelBtnTxt;
-                document.getElementById('saveEditBtn').style.display = 'block';
-                document.getElementById('shareBtn').style.display = 'none';
-
-                let editHardwareHtml = '';
-                fieldsMapConfig.forEach(field => {
-                    const currentVal = aktuellesGeladenesSetup[field.key] || '';
-                    const placeholderTxt = field.required ? 'required' : 'optional...';
-                    
-                    editHardwareHtml += `
-                        <div class="component-line" style="margin-bottom: 12px; border-bottom: 1px dashed #333; padding-bottom: 8px;">
-                            <label class="component-label" for="edit_input_${field.key}" style="display:block; margin-bottom: 4px;">
-                                ${hardwareLabels[field.key][aktuelleSprache]} ${field.required ? '*' : ''}
-                            </label>
-                            <input type="text" class="edit-input-field" id="edit_input_${field.key}" value="${currentVal}" placeholder="${placeholderTxt}" ${field.required ? 'required' : ''}>
-                        </div>
-                    `;
-                });
-
-                document.getElementById('hardwareSpecBox').innerHTML = editHardwareHtml;
-            }
-        }
-
-        async function saveSetupChanges() {
-            if(!aktuellesGeladenesSetup) return;
-
-            const updatedCpu = document.getElementById('edit_input_cpu').value;
-            const updatedGpu = document.getElementById('edit_input_gpu').value;
-            const updatedRam = document.getElementById('edit_input_ram').value;
-
-            if(!updatedCpu || !updatedGpu || !updatedRam) {
-                alert("CPU, GPU and RAM are required!");
-                return;
-            }
-
-            const updateData = {};
-            fieldsMapConfig.forEach(field => {
-                const inputEl = document.getElementById(`edit_input_${field.key}`);
-                if(inputEl) {
-                    updateData[field.key] = inputEl.value;
-                }
-            });
-
-            const { error } = await dbClient
-                .from('setups')
-                .update(updateData)
-                .eq('id', aktuellesGeladenesSetup.id);
-
-            if (error) {
-                alert("Update Error: " + error.message);
-            } else {
-                alert(translations[aktuelleSprache].updateSuccess);
-                aktuellesGeladenesSetup = { ...aktuellesGeladenesSetup, ...updateData };
-                renderProfileViewData();
-            }
-        }
-
-        function zurueckZurStartseite() {
-            window.location.href = window.location.origin + window.location.pathname;
-        }
-
-        function linkKopieren() {
-            const profilUrl = window.location.href;
-            navigator.clipboard.writeText(profilUrl).then(() => {
-                const btn = document.getElementById('shareBtn');
-                btn.innerText = translations[aktuelleSprache].linkCopied;
-                btn.classList.add('copied');
-                setTimeout(() => {
-                    btn.innerText = translations[aktuelleSprache].copyLinkBtn;
-                    btn.classList.remove('copied');
-                }, 2000);
-            });
-        }
-
-        function quellcodeKopieren() {
-            const ganzerCode = document.documentElement.outerHTML;
-            const saubererCode = "<!DOCTYPE html>\n" + ganzerCode;
-            navigator.clipboard.writeText(saubererCode).then(() => {
-                const btn = document.getElementById('adminCopyBtn');
-                btn.innerText = "Code kopiert! Bereit für Gemini ✓";
-                setTimeout(() => { btn.innerText = "➔ Ganzen Quellcode für Gemini kopieren 🛠️"; }, 2000);
-            });
-        }
-
         async function setupAbschicken() {
             const sendData = {
                 cpu: document.getElementById('prozessor').value,
                 gpu: document.getElementById('grafikkarte').value,
-                ram: document.getElementById('ram').value,
-                mainboard: document.getElementById('mainboard').value,
-                kuehler: document.getElementById('kuehler').value,
-                festplatte: document.getElementById('festplatte').value,
-                gehaeuse: document.getElementById('gehaeuse').value,
-                case_fan: document.getElementById('case_fan').value,
-                netzteil: document.getElementById('netzteil').value,
-                cablemod: document.getElementById('cablemod').value,
-                monitor: document.getElementById('monitor').value,
-                keyboard: document.getElementById('keyboard').value,
-                mouse: document.getElementById('mouse').value,
-                headset: document.getElementById('headset').value,
-                sound: document.getElementById('sound').value,
-                webcam: document.getElementById('webcam').value,
-                chair: document.getElementById('chair').value,
-                desk: document.getElementById('desk').value,
-                accessories: document.getElementById('accessories').value
+                ram: document.getElementById('ram').value
             };
-
             const { data, error } = await dbClient.from('setups').insert([sendData]).select();
+            if (!error && data) { window.location.search = `?id=${data[0].id}`; }
+        }
 
-            if (error) {
-                alert("Database Error: " + error.message);
-            } else {
-                alert(translations[aktuelleSprache].alertSuccess);
-                
-                if(data && data[0] && data[0].id) {
-                    window.location.search = `?id=${data[0].id}`;
-                } else {
-                    window.location.reload();
-                }
-            }
+        function zurueckZurStartseite() { window.location.href = window.location.origin + window.location.pathname; }
+        function setLanguage(lang) { aktuelleSprache = lang; }
+        function quellcodeKopieren() {
+            navigator.clipboard.writeText("<!DOCTYPE html>\n" + document.documentElement.outerHTML);
         }
     </script>
 </body>
