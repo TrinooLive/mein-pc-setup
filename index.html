@@ -339,24 +339,27 @@
         let aktuelleSprache = 'de';
         let aktuellesGeladenesSetupId = null;
         let currentUser = null;
+        let presenceKanal = null;
 
         window.onload = async function() {
             // 1. Auth Status prüfen
             const { data: { session } } = await dbClient.auth.getSession();
             if (session) {
                 userEinloggenStatus(session.user);
+            } else {
+                userAusloggenStatus();
             }
 
-            // 2. Auth State Listener (falls OAuth Redirect zurückkommt)
-            dbClient.auth.onAuthStateChange((_event, session) => {
-                if (session) { userEinloggenStatus(session.user); }
-                else { userAusloggenStatus(); }
+            // 2. Auth State Listener
+            dbClient.auth.onAuthStateChange((event, session) => {
+                if (session) { 
+                    userEinloggenStatus(session.user); 
+                } else { 
+                    userAusloggenStatus(); 
+                }
             });
 
-            // 3. Echten Realtime Presence Counter starten
-            starteRealtimePresence();
-
-            // 4. Gesamt-Statistiken & URL checken
+            // 3. Gesamt-Statistiken & URL checken
             communityStatsAbrufen();
             renderPageBasedOnUrl();
         };
@@ -403,11 +406,17 @@
             if(document.getElementById('ratingStatus')) {
                 document.getElementById('ratingStatus').innerText = "Klicke auf die Sterne, um abzustimmen.";
             }
+            starteRealtimePresence();
         }
 
         async function logout() {
+            if(presenceKanal) {
+                await presenceKanal.unsubscribe();
+            }
             await dbClient.auth.signOut();
             userAusloggenStatus();
+            // Nur beim händischen Logout laden wir einmal neu, um alles sauber zurückzusetzen
+            window.location.href = window.location.origin + window.location.pathname;
         }
 
         function userAusloggenStatus() {
@@ -415,7 +424,10 @@
             document.getElementById('loginSection').style.display = 'block';
             document.getElementById('userStatus').style.display = 'none';
             document.getElementById('formArea').classList.remove('unlocked');
-            window.location.reload();
+            if(document.getElementById('ratingStatus')) {
+                document.getElementById('ratingStatus').innerText = "Logge dich ein, um abzustimmen.";
+            }
+            starteRealtimePresence();
         }
 
         /* ================= STATS & REALTIME COUNTER ================= */
@@ -427,25 +439,35 @@
         }
 
         function starteRealtimePresence() {
-            // Nutzt Supabase Presence Kanäle für die Zählung echter offener Web-Verbindungen
-            const room = dbClient.channel('online-users', {
-                config: { presence: { key: currentUser ? currentUser.id : 'anonymous-' + Math.random() } }
+            if(presenceKanal) {
+                presenceKanal.unsubscribe();
+            }
+
+            const eindeutigeKey = currentUser ? currentUser.id : 'anon-' + Math.random().toString(36).substring(2, 11);
+            
+            presenceKanal = dbClient.channel('online-users', {
+                config: { presence: { key: eindeutigeKey } }
             });
 
-            room.on('presence', { event: 'sync' }, () => {
-                const newState = room.presenceState();
+            presenceKanal.on('presence', { event: 'sync' }, () => {
+                const newState = presenceKanal.presenceState();
                 const totalOnline = Object.keys(newState).length;
                 document.getElementById('globalOnlineUsers').innerText = totalOnline;
             })
             .subscribe(async (status) => {
                 if (status === 'SUBSCRIBED') {
-                    await room.track({ online_at: new Date().toISOString() });
+                    await presenceKanal.track({ online_at: new Date().toISOString() });
                 }
             });
         }
 
         /* ================= TRACKING VIEWS & RETRIEVAL ================= */
         async function profilAbrufen(id) {
+            // Verhindert doppelte Aufrufe, falls die ID schon geladen ist
+            if(aktuellesGeladenesSetupId === id && document.getElementById('profilContainer').classList.contains('active')) {
+                return;
+            }
+
             aktuellesGeladenesSetupId = id;
             document.getElementById('mainFormContainer').style.display = 'none';
             document.getElementById('communityListContainer').style.display = 'none';
@@ -497,7 +519,6 @@
                 return;
             }
 
-            // Upsert: Wenn der User schon gestimmt hat, wird seine Bewertung aktualisiert
             const { error } = await dbClient.from('setup_votes').upsert({
                 setup_id: aktuellesGeladenesSetupId,
                 user_id: currentUser.id,
@@ -547,7 +568,9 @@
                 ram: document.getElementById('ram').value
             };
             const { data, error } = await dbClient.from('setups').insert([sendData]).select();
-            if (!error && data) { window.location.search = `?id=${data[0].id}`; }
+            if (!error && data) { 
+                window.location.search = `?id=${data[0].id}`; 
+            }
         }
 
         function zurueckZurStartseite() { window.location.href = window.location.origin + window.location.pathname; }
