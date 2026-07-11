@@ -229,7 +229,6 @@
     </div>
 
     <script>
-        // Direkt initialisiert mit deinen echten Projektdaten
         const supabaseClient = supabase.createClient(
             "https://dvttzclfrfufhjqdyswu.supabase.co", 
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR2dHR6Y2xmcmZ1ZmhqcWR5c3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEzNzMxNjIsImV4cCI6MjA2Njk0OTE2Mn0.zC6iW72r4i3yvO03A0C8-555"
@@ -237,12 +236,11 @@
 
         let isLoginMode = true;
 
-        // Funktion für Social Logins (Twitch, Discord, Google)
         async function loginWithProvider(provider) {
             const { data, error } = await supabaseClient.auth.signInWithOAuth({
                 provider: provider,
                 options: {
-                    redirectTo: window.location.origin
+                    redirectTo: "https://mein-pc-setup.vercel.app"
                 }
             });
 
@@ -251,7 +249,6 @@
             }
         }
 
-        // Funktion für E-Mail & Passwort (Login / Registrierung)
         async function handleAuth(event) {
             event.preventDefault();
             const email = document.getElementById('email').value;
@@ -259,7 +256,6 @@
             hideMessage();
 
             if (isLoginMode) {
-                // Einloggen
                 const { data, error } = await supabaseClient.auth.signInWithPassword({
                     email: email,
                     password: password
@@ -271,7 +267,6 @@
                     showMessage("Erfolgreich eingeloggt! Du wirst weitergeleitet...", false);
                 }
             } else {
-                // Registrieren
                 const { data, error } = await supabaseClient.auth.signUp({
                     email: email,
                     password: password
@@ -285,7 +280,6 @@
             }
         }
 
-        // Wechselt zwischen Login- und Registrierungs-Modus im Formular
         function toggleMode(event) {
             event.preventDefault();
             isLoginMode = !isLoginMode;
@@ -305,7 +299,6 @@
             }
         }
 
-        // Hilfsfunktionen für Feedback-Meldungen
         function showMessage(text, isError) {
             const msgDiv = document.getElementById('message');
             msgDiv.innerText = text;
@@ -317,7 +310,6 @@
             document.getElementById('message').style.display = 'none';
         }
 
-        // Checken, ob der User bereits eingeloggt ist, wenn er die Seite öffnet
         async function checkUser() {
             const { data: { user } } = await supabaseClient.auth.getUser();
             if (user) {
