@@ -240,7 +240,8 @@
             const { data, error } = await supabaseClient.auth.signInWithOAuth({
                 provider: provider,
                 options: {
-                    redirectTo: "https://mein-pc-setup.vercel.app"
+                    redirectTo: "https://mein-pc-setup.vercel.app",
+                    flowType: 'pkce'
                 }
             });
 
