@@ -3,529 +3,333 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Twitch.tv/Trinoo | Real PC-Setups Platform</title>
-    
+    <title>Trinoo Setups - Login</title>
     <!-- Supabase JS Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <style>
-        body { 
-            background: #111; 
-            color: #fff; 
-            font-family: sans-serif; 
-            text-align: center; 
-            padding: 40px 20px; 
-            margin: 0;
+        :root {
+            --bg-color: #0b0e14;
+            --card-bg: #151a22;
+            --text-color: #ffffff;
+            --text-muted: #8a9ba8;
+            --input-bg: #1c2331;
+            --border-color: #2c364c;
+            --primary: #3b82f6;
+            --twitch: #9146ff;
+            --discord: #5865f2;
+            --google: #ea4335;
         }
-        h1 { color: #00ff88; margin-bottom: 5px; }
-        .subtitle { color: #888; font-size: 1.2rem; margin-top: 0; margin-bottom: 20px; }
-        
-        /* Global Community Stats Bar */
-        .stats-bar {
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             display: flex;
             justify-content: center;
-            gap: 20px;
-            max-width: 550px;
-            margin: 0 auto 30px auto;
-            background: #161616;
-            border: 1px solid #222;
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-size: 0.9rem;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
         }
-        .stat-item {
+
+        .login-container {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 420px;
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 6px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        /* Social Buttons */
+        .social-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .btn-social {
             display: flex;
             align-items: center;
-            gap: 6px;
-            color: #aaa;
-        }
-        .stat-value {
-            color: #00ff88;
-            font-weight: bold;
-        }
-        .pulse-dot {
-            width: 8px;
-            height: 8px;
-            background: #00ff88;
-            border-radius: 50%;
-            display: inline-block;
-            box-shadow: 0 0 8px #00ff88;
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0 { transform: scale(0.9); opacity: 0.6; }
-            50% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(0.9); opacity: 0.6; }
-        }
-
-        .twitch-btn {
-            display: inline-block;
-            background: #9146FF;
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-weight: bold;
-            margin-bottom: 30px;
-        }
-
-        /* Container & Forms */
-        .setup-container {
-            max-width: 500px;
-            margin: 0 auto 40px auto;
-            background: #1a1a1a;
-            padding: 30px;
-            border-radius: 10px;
-            border: 1px solid #333;
-            text-align: left;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .setup-container.profil-view-layout {
-            max-width: 950px;
-        }
-        .setup-container h2 {
-            margin-top: 0;
-            color: #00ff88;
-            border-bottom: 1px solid #333;
-            padding-bottom: 10px;
-        }
-
-        .profile-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 25px;
-            margin-top: 20px;
-        }
-        @media (min-width: 768px) {
-            .profile-grid { grid-template-columns: 1.2fr 1fr; }
-        }
-
-        .media-box {
-            background: #252525;
-            border: 2px dashed #444;
-            border-radius: 8px;
-            padding: 40px 20px;
-            text-align: center;
-            color: #888;
-            min-height: 200px;
-        }
-
-        /* Sterne Bewertung */
-        .rating-box {
-            background: #222;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-            border: 1px solid #333;
-        }
-        .stars {
-            display: flex;
-            gap: 5px;
-            margin: 10px 0;
-            font-size: 1.5rem;
-        }
-        .star {
-            cursor: pointer;
-            color: #444;
-            transition: color 0.2s;
-        }
-        .star.active, .star:hover {
-            color: #ffcc00;
-        }
-
-        /* Schlanke Social Login Sektion */
-        .social-login-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            justify-content: center;
             gap: 10px;
-            margin-bottom: 15px;
-        }
-        .auth-btn {
-            padding: 10px;
-            background: #333;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 0.9rem;
-        }
-        .auth-btn:hover { background: #444; }
-        .btn-twitch { background: #9146FF; color: white; }
-        .btn-twitch:hover { background: #772ce8; }
-        .btn-google { background: #fff; color: #111; }
-        .btn-google:hover { background: #eee; }
-        .btn-apple { background: #000; color: #fff; border: 1px solid #333; }
-        .btn-apple:hover { background: #222; }
-        
-        /* Schlanke E-Mail Eingabe */
-        .auth-input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            background: #252525;
-            border: 1px solid #444;
-            color: #fff;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        
-        .user-status {
-            display: none;
-            background: #252525;
             padding: 12px;
-            border-radius: 5px;
-            border: 1px solid #00ff88;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .logout-btn {
-            background: none;
             border: none;
-            color: #ff4444;
+            border-radius: 6px;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+
+        .btn-social:active {
+            transform: scale(0.98);
+        }
+
+        .btn-twitch { background-color: var(--twitch); }
+        .btn-discord { background-color: var(--discord); }
+        .btn-google { background-color: var(--google); }
+
+        .btn-social:hover {
+            opacity: 0.9;
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: var(--text-muted);
+            margin: 24px 0;
+            font-size: 13px;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .divider:not(:empty)::before { margin-right: .5em; }
+        .divider:not(:empty)::after { margin-left: .5em; }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: white;
+            font-size: 15px;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .auth-switch a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .auth-switch a:hover {
             text-decoration: underline;
         }
 
-        .form-area { opacity: 0.2; pointer-events: none; }
-        .form-area.unlocked { opacity: 1; pointer-events: auto; }
-        
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; color: #ccc; font-weight: bold; }
-        .form-group input {
-            width: 100%; padding: 12px; background: #252525; border: 1px solid #444; border-radius: 5px; color: #fff; box-sizing: border-box;
-        }
-        .form-group input:focus { outline: none; border-color: #00ff88; }
-
-        .submit-btn {
-            width: 100%; background: #00ff88; color: #111; border: none; padding: 14px; font-weight: bold; border-radius: 5px; cursor: pointer;
+        #message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: center;
+            display: none;
         }
 
-        .list-container { max-width: 500px; margin: 0 auto; text-align: left; }
-        .list-container h3 { color: #00ff88; border-bottom: 2px solid #333; padding-bottom: 8px; }
-        
-        .setup-card {
-            background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 15px; margin-bottom: 15px; text-decoration: none; color: inherit; display: block;
-        }
-        .setup-card:hover { border-color: #00ff88; }
-        .setup-card-header { font-size: 0.85rem; color: #888; margin-bottom: 10px; display: flex; justify-content: space-between; }
-        
-        .profil-view { display: none; }
-        .profil-view.active { display: block; }
-        
-        .profil-spec-box { background: #252525; padding: 20px; border-radius: 8px; border-left: 4px solid #00ff88; }
-        .component-line { margin: 8px 0; }
-        .component-label { color: #aaa; font-weight: bold; display: inline-block; width: 140px; }
-
-        .admin-copy-container { max-width: 500px; margin: 60px auto 20px auto; }
-        .admin-copy-btn { background: #222; color: #666; border: 1px solid #333; padding: 10px; width: 100%; cursor: pointer; border-radius: 5px; }
+        .error { background-color: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444; }
+        .success { background-color: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid #22c55e; }
     </style>
 </head>
 <body>
 
-    <h1>Twitch.tv/Trinoo</h1>
-    <p class="subtitle">Community-Projekt</p>
+    <div class="login-container">
+        <h1 id="form-title">Anmelden</h1>
+        <div class="subtitle">Trinoo Setups Dashboard</div>
 
-    <!-- REAL COMMUNITY STATS BAR -->
-    <div class="stats-bar">
-        <div class="stat-item">
-            <span>Community Setups:</span>
-            <span class="stat-value" id="globalTotalSetups">...</span>
+        <!-- Social Logins -->
+        <div class="social-buttons">
+            <button class="btn-social btn-twitch" onclick="loginWithProvider('twitch')">
+                Mit Twitch anmelden
+            </button>
+            <button class="btn-social btn-discord" onclick="loginWithProvider('discord')">
+                Mit Discord anmelden
+            </button>
+            <button class="btn-social btn-google" onclick="loginWithProvider('google')">
+                Mit Google anmelden
+            </button>
         </div>
-        <div style="color: #333;">|</div>
-        <div class="stat-item">
-            <span class="pulse-dot"></span>
-            <span>User live auf der Seite:</span>
-            <span class="stat-value" id="globalOnlineUsers">1</span>
-        </div>
-    </div>
-    
-    <a href="https://twitch.tv/Trinoo" target="_blank" class="twitch-btn">👾 Besuche den Stream</a>
 
-    <!-- FORMULAR / ECHTES AUTH -->
-    <div class="setup-container" id="mainFormContainer">
-        <h2>Setup einreichen</h2>
-        
-        <!-- COMPACT AUTH SECTION -->
-        <div class="login-section" id="loginSection">
-            <!-- Social Logins nebeneinander in einer Reihe -->
-            <div class="social-login-grid">
-                <button class="auth-btn btn-twitch" onclick="loginMitOAuth('twitch')">Twitch</button>
-                <button class="auth-btn btn-google" onclick="loginMitOAuth('google')">Google</button>
-                <button class="auth-btn btn-apple" onclick="loginMitOAuth('apple')">Apple</button>
+        <div class="divider">oder klassisch</div>
+
+        <!-- E-Mail / Passwort Form -->
+        <form id="auth-form" onsubmit="handleAuth(event)">
+            <div class="form-group">
+                <label for="email">E-Mail-Adresse</label>
+                <input type="email" id="email" required placeholder="name@beispiel.de">
             </div>
-            
-            <div style="text-align:center; margin: 8px 0; color: #555; font-size:0.75rem; font-weight: bold;">ODER MIT EMAIL</div>
-            <input type="email" id="authEmail" class="auth-input" placeholder="Deine E-Mail">
-            <input type="password" id="authPassword" class="auth-input" placeholder="Passwort">
-            
-            <button class="auth-btn" style="width: 100%; margin-bottom: 6px;" onclick="loginMitEmail()">Einloggen</button>
-            <button class="auth-btn" style="background:none; color:#888; font-size:0.8rem; width: 100%; padding: 4px;" onclick="registrierenMitEmail()">Konto registrieren</button>
-        </div>
-
-        <div class="user-status" id="userStatus">
-            🟢 Eingeloggt als: <span id="username" style="color: #00ff88;">...</span>
-            <br>
-            <button class="logout-btn" onclick="logout()">[ Abmelden ]</button>
-        </div>
-        
-        <div class="form-area" id="formArea">
-            <form onsubmit="setupAbschicken(); return false;">
-                <div class="form-group"><label>Prozessor (CPU)</label><input type="text" id="prozessor" required></div>
-                <div class="form-group"><label>Grafikkarte (GPU)</label><input type="text" id="grafikkarte" required></div>
-                <div class="form-group"><label>Arbeitsspeicher (RAM)</label><input type="text" id="ram" required></div>
-                <button type="submit" class="submit-btn">Setup abschicken 🚀</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- PROFIL ANSICHT MIT VIEWS & RATING -->
-    <div class="setup-container profil-view profil-view-layout" id="profilContainer">
-        <button class="auth-btn" style="width:auto; display:inline-block; background:#222; margin-bottom:15px;" onclick="zurueckZurStartseite()">⬅ Zurück</button>
-        
-        <h2 id="profilTitle">PC Setup</h2>
-        
-        <p style="font-size: 1rem; color: #00ff88; margin-bottom:20px;">
-            👁️ <span id="viewCount">0</span> Views | ⭐ Durchschnitt: <span id="avgRating">0.0</span>/5 (<span id="totalVotes">0</span> Stimmen)
-        </p>
-        
-        <div class="profile-grid">
-            <div class="profil-spec-box" id="hardwareSpecBox"></div>
-            <div>
-                <div class="media-box">📸 Bilder-Upload folgt im nächsten Schritt.</div>
-                
-                <div class="rating-box">
-                    <div style="font-weight:bold; font-size:0.9rem;">Dieses Setup bewerten:</div>
-                    <div class="stars" id="starContainer">
-                        <span class="star" onclick="voteSetup(1)">★</span>
-                        <span class="star" onclick="voteSetup(2)">★</span>
-                        <span class="star" onclick="voteSetup(3)">★</span>
-                        <span class="star" onclick="voteSetup(4)">★</span>
-                        <span class="star" onclick="voteSetup(5)">★</span>
-                    </div>
-                    <div id="ratingStatus" style="font-size:0.8rem; color:#888;">Logge dich ein, um abzustimmen.</div>
-                </div>
+            <div class="form-group">
+                <label for="password">Passwort</label>
+                <input type="password" id="password" required placeholder="••••••••">
             </div>
+            <button type="submit" class="btn-primary" id="submit-btn">Einloggen</button>
+        </form>
+
+        <div id="message"></div>
+
+        <div class="auth-switch" id="auth-switch-container">
+            Noch kein Konto? <a href="#" onclick="toggleMode(event)">Jetzt registrieren</a>
         </div>
-    </div>
-
-    <!-- LISTE -->
-    <div class="list-container" id="communityListContainer">
-        <h3>🖥️ Neueste Community-Setups</h3>
-        <div id="setupsList"></div>
-    </div>
-
-    <div class="admin-copy-container">
-        <button class="admin-copy-btn" onclick="quellcodeKopieren()">➔ Ganzen Quellcode für Gemini kopieren 🛠️</button>
     </div>
 
     <script>
+        // 1. HIER DEINE EIGENEN SUPABASE CREDENTIALS EINTRAGEN
         const SUPABASE_URL = "https://dvttzclfrfufhjqdyswu.supabase.co";
-        const SUPABASE_ANON_KEY = "sb_publishable_2gQmO2ZUVTIio65mbh7Muw_P4OkyA7K";
-        const dbClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const SUPABASE_ANON_KEY = "DEIN_SUPABASE_ANON_KEY_HIER_EINFÜGEN";
 
-        let aktuellesGeladenesSetupId = null;
-        let currentUser = null;
-        let presenceKanal = null;
+        // Supabase Client initialisieren
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        window.onload = async function() {
-            const { data: { session } } = await dbClient.auth.getSession();
-            if (session) { userEinloggenStatus(session.user); } 
-            else { userAusloggenStatus(); }
+        let isLoginMode = true;
 
-            dbClient.auth.onAuthStateChange((event, session) => {
-                if (session) { userEinloggenStatus(session.user); } 
-                else { userAusloggenStatus(); }
+        // Funktion für Social Logins (Twitch, Discord, Google)
+        async function loginWithProvider(provider) {
+            const { data, error } = await supabase.auth.signInWithOAuth({
+                provider: provider,
+                options: {
+                    // Leitet den User nach dem Login zurück auf deine Seite
+                    redirectTo: window.location.origin
+                }
             });
 
-            communityStatsAbrufen();
-            renderPageBasedOnUrl();
-        };
-
-        function renderPageBasedOnUrl() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const setupId = urlParams.get('id');
-            if (setupId) { profilAbrufen(setupId); } 
-            else { setupsAbrufen(); }
-        }
-
-        /* ================= AUTHENTIFIZIERUNG ================= */
-        async function loginMitOAuth(providerName) {
-            const { error } = await dbClient.auth.signInWithOAuth({
-                provider: providerName,
-                options: { redirectTo: window.location.origin + window.location.pathname }
-            });
-            if (error) alert("OAuth Fehler: " + error.message + "\nHast du diesen Provider im Supabase Dashboard unter Authentication -> Providers aktiviert?");
-        }
-
-        async function loginMitEmail() {
-            const email = document.getElementById('authEmail').value;
-            const password = document.getElementById('authPassword').value;
-            const { error } = await dbClient.auth.signInWithPassword({ email, password });
-            if (error) alert("Login Fehler: " + error.message);
-        }
-
-        async function registrierenMitEmail() {
-            const email = document.getElementById('authEmail').value;
-            const password = document.getElementById('authPassword').value;
-            const { error } = await dbClient.auth.signUp({ email, password });
-            if (error) alert("Registrierungs-Fehler: " + error.message);
-            else alert("Registrierung erfolgreich! Bitte schaue in dein E-Mail-Postfach für den Bestätigungslink.");
-        }
-
-        function userEinloggenStatus(user) {
-            currentUser = user;
-            document.getElementById('loginSection').style.display = 'none';
-            document.getElementById('userStatus').style.display = 'block';
-            document.getElementById('username').innerText = user.email || (user.user_metadata ? user.user_metadata.full_name : user.id);
-            document.getElementById('formArea').classList.add('unlocked');
-            if(document.getElementById('ratingStatus')) {
-                document.getElementById('ratingStatus').innerText = "Klicke auf die Sterne, um abzustimmen.";
+            if (error) {
+                showMessage(error.message, true);
             }
-            starteRealtimePresence();
         }
 
-        async function logout() {
-            if(presenceKanal) { await presenceKanal.unsubscribe(); }
-            await dbClient.auth.signOut();
-            userAusloggenStatus();
-            window.location.href = window.location.origin + window.location.pathname;
-        }
+        // Funktion für E-Mail & Passwort (Login / Registrierung)
+        async function handleAuth(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            hideMessage();
 
-        function userAusloggenStatus() {
-            currentUser = null;
-            document.getElementById('loginSection').style.display = 'block';
-            document.getElementById('userStatus').style.display = 'none';
-            document.getElementById('formArea').classList.remove('unlocked');
-            if(document.getElementById('ratingStatus')) {
-                document.getElementById('ratingStatus').innerText = "Logge dich ein, um abzustimmen.";
-            }
-            starteRealtimePresence();
-        }
+            if (isLoginMode) {
+                // Einloggen
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
 
-        /* ================= STATS & COUNTER ================= */
-        async function communityStatsAbrufen() {
-            const { count, error } = await dbClient.from('setups').select('*', { count: 'exact', head: true });
-            if (!error && count !== null) { document.getElementById('globalTotalSetups').innerText = count; }
-        }
-
-        function starteRealtimePresence() {
-            if(presenceKanal) { presenceKanal.unsubscribe(); }
-            const eindeutigeKey = currentUser ? currentUser.id : 'anon-' + Math.random().toString(36).substring(2, 11);
-            
-            presenceKanal = dbClient.channel('online-users', { config: { presence: { key: eindeutigeKey } } });
-            presenceKanal.on('presence', { event: 'sync' }, () => {
-                const newState = presenceKanal.presenceState();
-                document.getElementById('globalOnlineUsers').innerText = Object.keys(newState).length;
-            })
-            .subscribe(async (status) => {
-                if (status === 'SUBSCRIBED') { await presenceKanal.track({ online_at: new Date().toISOString() }); }
-            });
-        }
-
-        /* ================= VIEWS & DATA ================= */
-        async function profilAbrufen(id) {
-            if(aktuellesGeladenesSetupId === id && document.getElementById('profilContainer').classList.contains('active')) return;
-
-            aktuellesGeladenesSetupId = id;
-            document.getElementById('mainFormContainer').style.display = 'none';
-            document.getElementById('communityListContainer').style.display = 'none';
-            document.getElementById('profilContainer').classList.add('active');
-
-            const { data, error } = await dbClient.from('setups').select('*').eq('id', id).single();
-            if (error || !data) return;
-
-            const neueViews = (data.views || 0) + 1;
-            await dbClient.from('setups').update({ views: neueViews }).eq('id', id);
-            document.getElementById('viewCount').innerText = neueViews;
-
-            bewertungenLaden(id);
-
-            document.getElementById('profilTitle').innerText = `Setup #${data.id}`;
-            document.getElementById('hardwareSpecBox').innerHTML = `
-                <div class="component-line"><span class="component-label">CPU:</span> ${data.cpu}</div>
-                <div class="component-line"><span class="component-label">GPU:</span> ${data.gpu}</div>
-                <div class="component-line"><span class="component-label">RAM:</span> ${data.ram}</div>
-            `;
-        }
-
-        async function bewertungenLaden(setupId) {
-            const { data, error } = await dbClient.from('setup_votes').select('rating').eq('setup_id', setupId);
-            if (error || !data) return;
-
-            const total = data.length;
-            document.getElementById('totalVotes').innerText = total;
-
-            if(total > 0) {
-                const sum = data.reduce((acc, curr) => acc + curr.rating, 0);
-                const avg = (sum / total).toFixed(1);
-                document.getElementById('avgRating').innerText = avg;
-                highlightSterne(Math.round(avg));
+                if (error) {
+                    showMessage(error.message, true);
+                } else {
+                    showMessage("Erfolgreich eingeloggt! Du wirst weitergeleitet...", false);
+                    // Hier kannst du den User zu seiner Dashboard-Unterseite schicken:
+                    // window.location.href = '/dashboard.html';
+                }
             } else {
-                document.getElementById('avgRating').innerText = "0.0";
-                highlightSterne(0);
+                // Registrieren (Da "Confirm Email" aus ist, loggt Supabase den User hiernach SOFORT ein!)
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password
+                });
+
+                if (error) {
+                    showMessage(error.message, true);
+                } else {
+                    showMessage("Registrierung erfolgreich! Du bist jetzt eingeloggt.", false);
+                }
             }
         }
 
-        /* ================= VOTING SYSTEM ================= */
-        async function voteSetup(sterne) {
-            if (!currentUser) {
-                alert("Du musst eingeloggt sein, um ein Setup zu bewerten!");
-                return;
+        // Wechselt zwischen Login- und Registrierungs-Modus im Formular
+        function toggleMode(event) {
+            event.preventDefault();
+            isLoginMode = !isLoginMode;
+            
+            const formTitle = document.getElementById('form-title');
+            const submitBtn = document.getElementById('submit-btn');
+            const switchContainer = document.getElementById('auth-switch-container');
+
+            if (isLoginMode) {
+                formTitle.innerText = "Anmelden";
+                submitBtn.innerText = "Einloggen";
+                switchContainer.innerHTML = 'Noch kein Konto? <a href="#" onclick="toggleMode(event)">Jetzt registrieren</a>';
+            } else {
+                formTitle.innerText = "Registrieren";
+                submitBtn.innerText = "Konto erstellen";
+                switchContainer.innerHTML = 'Bereits registriert? <a href="#" onclick="toggleMode(event)">Hier einloggen</a>';
             }
-            const { error } = await dbClient.from('setup_votes').upsert({
-                setup_id: aktuellesGeladenesSetupId,
-                user_id: currentUser.id,
-                rating: sterne
-            }, { onConflict: 'setup_id, user_id' });
+        }
 
-            if(error) alert("Fehler beim Abstimmen: " + error.message);
-            else {
-                document.getElementById('ratingStatus').innerText = `Du hast dieses Setup mit ${sterne} Sternen bewertet! ✓`;
-                bewertungenLaden(aktuellesGeladenesSetupId);
+        // Hilfsfunktionen für Feedback-Meldungen
+        function showMessage(text, isError) {
+            const msgDiv = document.getElementById('message');
+            msgDiv.innerText = text;
+            msgDiv.className = isError ? 'error' : 'success';
+            msgDiv.style.display = 'block';
+        }
+
+        function hideMessage() {
+            document.getElementById('message').style.display = 'none';
+        }
+
+        // Checken, ob der User bereits eingeloggt ist, wenn er die Seite öffnet
+        async function checkUser() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                console.log("User ist eingeloggt:", user);
+                // Optional: Hier direkt zum geschützten Bereich weiterleiten
             }
         }
-
-        function highlightSterne(anzahl) {
-            const stars = document.querySelectorAll('.star');
-            stars.forEach((star, index) => {
-                if(index < anzahl) star.classList.add('active');
-                else star.classList.remove('active');
-            });
-        }
-
-        async function setupsAbrufen() {
-            const { data, error } = await dbClient.from('setups').select('id, cpu, gpu, ram, views').order('id', { ascending: false }).limit(5);
-            if (error || !data) return;
-
-            let listHtml = '';
-            data.forEach((setup) => {
-                listHtml += `
-                    <a href="?id=${setup.id}" class="setup-card">
-                        <div class="setup-card-header">
-                            <span>🖥️ Setup #${setup.id}</span>
-                            <span>👁️ ${setup.views || 0} Views</span>
-                        </div>
-                        <div><strong>CPU:</strong> ${setup.cpu} | <strong>GPU:</strong> ${setup.gpu}</div>
-                    </a>
-                `;
-            });
-            document.getElementById('setupsList').innerHTML = listHtml;
-        }
-
-        async function setupAbschicken() {
-            const sendData = {
-                cpu: document.getElementById('prozessor').value,
-                gpu: document.getElementById('grafikkarte').value,
-                ram: document.getElementById('ram').value
-            };
-            const { data, error } = await dbClient.from('setups').insert([sendData]).select();
-            if (!error && data) { window.location.search = `?id=${data[0].id}`; }
-        }
-
-        function zurueckZurStartseite() { window.location.href = window.location.origin + window.location.pathname; }
-        function quellcodeKopieren() { navigator.clipboard.writeText("<!DOCTYPE html>\n" + document.documentElement.outerHTML); }
+        checkUser();
     </script>
 </body>
 </html>
