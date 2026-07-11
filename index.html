@@ -10,7 +10,12 @@
         .container { max-width: 900px; margin: auto; }
         h1 { color: var(--accent); margin-bottom: 20px; }
         
-        .stream-container { position: relative; width: 100%; aspect-ratio: 16 / 9; border: 2px solid var(--accent); border-radius: 4px; overflow: hidden; background: #000; margin-bottom: 10px; }
+        .stream-container { 
+            position: relative; width: 100%; aspect-ratio: 16 / 9; 
+            border: 2px solid var(--accent); border-radius: 4px; 
+            overflow: hidden; background: #000; margin-bottom: 0; /* Margin auf 0 gesetzt */
+            line-height: 0; 
+        }
         #status-badge { position: absolute; top: 10px; right: 10px; z-index: 20; background: rgba(0, 0, 0, 0.8); color: white; padding: 6px 12px; border-radius: 4px; font-size: 0.85em; font-weight: bold; display: flex; align-items: center; gap: 8px; border: 1px solid #333; }
         .dot { width: 10px; height: 10px; border-radius: 50%; }
         .online { background: #00ff00; animation: blink 1.5s infinite; }
@@ -18,9 +23,14 @@
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
         .stream-container iframe { width: 100%; height: 100%; display: block; border: none; }
         
-        .stream-link { display: block; width: 100%; padding: 15px; margin-bottom: 40px; background: var(--accent); color: white; text-align: center; font-weight: bold; text-decoration: none; border-radius: 4px; }
-        h2 { color: var(--accent); text-align: center; margin-top: 40px; margin-bottom: 25px; }
+        .stream-link { 
+            display: block; width: 100%; padding: 15px; margin-bottom: 40px; 
+            background: var(--accent); color: white; text-align: center; 
+            font-weight: bold; text-decoration: none; border-radius: 0 0 4px 4px; /* Oben ohne Radius für Bündigkeit */
+            box-sizing: border-box; /* WICHTIG */
+        }
         
+        h2 { color: var(--accent); text-align: center; margin-top: 40px; margin-bottom: 25px; }
         .hardware-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .column { display: flex; flex-direction: column; gap: 10px; }
         .card { background: var(--card); padding: 12px; border-radius: 6px; border: 1px solid #2c364c; font-size: 0.9em; }
@@ -36,7 +46,6 @@
             <div id="status-badge"><span id="dot" class="dot offline"></span><span id="text">OFFLINE</span></div>
             <iframe src="https://player.twitch.tv/?channel=trinoo&parent=mein-pc-setup.vercel.app" allowfullscreen></iframe>
         </div>
-        
         <a href="https://www.twitch.tv/trinoo" class="stream-link" target="_blank" rel="noopener noreferrer">Zum Stream</a>
 
         <h2>Mein Gaming Setup</h2>
@@ -68,7 +77,6 @@
         </div>
         <p class="disclaimer">Hinweis: Bei den oben genannten Links handelt es sich um Affiliate-Links.</p>
     </div>
-
     <script>
         async function updateStatus() {
             try {
