@@ -11,6 +11,92 @@
         h1 { color: var(--accent); margin-bottom: 20px; }
         h2 { color: var(--accent); text-align: center; margin-top: 40px; margin-bottom: 25px; }
         
+        .stream-container { position: relative; width: 100%; }
+        
+        /* Zuschauer-Badge oben rechts */
+        .viewer-count {
+            position: absolute; top: 10px; right: 10px; z-index: 10;
+            background: rgba(0, 0, 0, 0.7); color: white; padding: 5px 10px;
+            border-radius: 4px; font-size: 0.8em; font-weight: bold;
+        }
+
+        .stream-wrapper { 
+            width: 100%; aspect-ratio: 16 / 9; 
+            border: 2px solid var(--accent); border-radius: 4px; 
+            overflow: hidden; background: #000; margin-bottom: 10px;
+            line-height: 0;
+        }
+        .stream-wrapper iframe { width: 100%; height: 100%; display: block; border: none; }
+        
+        .stream-link { 
+            display: block; width: 100%; padding: 15px; margin-bottom: 40px;
+            background: var(--accent); color: white; text-align: center; 
+            font-weight: bold; text-decoration: none; border-radius: 4px; 
+            box-sizing: border-box;
+        }
+        
+        .hardware-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .card { background: var(--card); padding: 15px; border-radius: 6px; border: 1px solid #2c364c; }
+        a { color: var(--accent); text-decoration: none; font-weight: bold; }
+        
+        .disclaimer { 
+            margin-top: 25px; font-size: 0.85em; color: #888; text-align: center; font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Twitch.tv/Trinoo's Setup</h1>
+        
+        <div class="stream-container">
+            <div class="viewer-count">LIVE: Zuschauerzahl...</div>
+            <div class="stream-wrapper">
+                <iframe src="https://player.twitch.tv/?channel=trinoo&parent=mein-pc-setup.vercel.app" allowfullscreen></iframe>
+            </div>
+        </div>
+        
+        <a href="https://www.twitch.tv/trinoo" class="stream-link" target="_blank" rel="noopener noreferrer">Zum Stream</a>
+
+        <h2>Mein Gaming Setup</h2>
+        <div class="hardware-grid">
+            <div class="card"><strong>CPU:</strong> <a href="https://amzn.to/4o0S9kM" target="_blank" rel="noopener noreferrer">AMD Ryzen 7 9800X3D</a></div>
+            <div class="card"><strong>CPU Kühler:</strong> <a href="https://amzn.to/42GQicb" target="_blank" rel="noopener noreferrer">Arctic Liquid Freezer III 420 A-RGB</a></div>
+            <div class="card"><strong>GPU:</strong> <a href="https://amzn.to/47qTQSu" target="_blank" rel="noopener noreferrer">MSI GeForce RTX 5080 16G Suprim SOC</a></div>
+            <div class="card"><strong>Mainboard:</strong> <a href="https://amzn.to/42HENBe" target="_blank" rel="noopener noreferrer">MSI MAG X670E Tomahawk WIFI</a></div>
+            <div class="card"><strong>RAM:</strong> <a href="https://amzn.to/4nROl4X" target="_blank" rel="noopener noreferrer">Adata XPG Lancer - 6400 MHz - 64 GB</a></div>
+            <div class="card"><strong>Main Monitor:</strong> <a href="https://amazon.de/dp/B09CD32DNH?tag=twitchtrino0a-21" target="_blank" rel="noopener noreferrer">Asus ROG Strix OLED XG27AQDMGR</a></div>
+            <div class="card"><strong>Side Monitore:</strong> <a href="https://amzn.to/42HEOoM" target="_blank" rel="noopener noreferrer">3x 27" Iiyama Red Eagle G2770QSU</a></div>
+            <div class="card"><strong>Monitorhalterung:</strong> <a href="https://amzn.to/3JfqJs3" target="_blank" rel="noopener noreferrer">Huanuo TS3</a></div>
+            <div class="card"><strong>Soundkarte:</strong> <a href="https://amzn.to/47nmjbP" target="_blank" rel="noopener noreferrer">Creative Sound BlasterX AE-5 Plus</a></div>
+            <div class="card"><strong>Kopfhörer:</strong> <a href="https://amzn.to/4qhYda6" target="_blank" rel="noopener noreferrer">Beyerdynamic DT 990 Pro - 250 Ω</a></div>
+            <div class="card"><strong>Mikrofon:</strong> <a href="https://amzn.to/4vNLmyy" target="_blank" rel="noopener noreferrer">Røde NT-USB+</a></div>
+            <div class="card"><strong>Mikrofonarm:</strong> <a href="https://amzn.to/47s7WTy" target="_blank" rel="noopener noreferrer">InnoGear Boom Arm</a></div>
+            <div class="card"><strong>Maus:</strong> <a href="https://amzn.to/3Pgiij1" target="_blank" rel="noopener noreferrer">Razer Naga V2 Pro</a></div>
+            <div class="card"><strong>Mauspad:</strong> <a href="https://amzn.to/4vlpB8g" target="_blank" rel="noopener noreferrer">CSL - Titanwolf 1200x600mm</a></div>
+            <div class="card"><strong>Tastatur:</strong> <a href="https://amzn.to/4yiOAfl" target="_blank" rel="noopener noreferrer">be quiet! Light Mount</a></div>
+            <div class="card"><strong>Gamepad:</strong> <a href="https://amzn.to/3QXZSol" target="_blank" rel="noopener noreferrer">GameSir Cyclone 2</a></div>
+            <div class="card"><strong>Netzteil:</strong> <a href="https://amzn.to/3KT9PzR" target="_blank" rel="noopener noreferrer">SeaSonic Vertex GX-1200 80+ Gold</a></div>
+            <div class="card"><strong>Tower:</strong> <a href="https://amzn.to/4n3a34P" target="_blank" rel="noopener noreferrer">Be Quiet! Light Base 900 DX</a></div>
+            <div class="card"><strong>Webcam:</strong> <a href="https://amzn.to/4swkEZv" target="_blank" rel="noopener noreferrer">Elgato Facecam 4K</a></div>
+            <div class="card"><strong>Gaming-Stuhl:</strong> <a href="https://amzn.to/3JeVfSO" target="_blank" rel="noopener noreferrer">AKRacing Master Max</a></div>
+        </div>
+        
+        <p class="disclaimer">Hinweis: Bei den oben genannten Links handelt es sich um Affiliate-Links. Wenn du über diese Links einkaufst, erhalte ich eine kleine Provision, ohne dass für dich zusätzliche Kosten entstehen.</p>
+    </div>
+</body>
+</html><!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitch.tv/Trinoo's Setup</title>
+    <style>
+        :root { --bg: #0b0e14; --card: #151a22; --accent: #9146ff; --text: #ffffff; }
+        body { font-family: sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: auto; }
+        h1 { color: var(--accent); margin-bottom: 20px; }
+        h2 { color: var(--accent); text-align: center; margin-top: 40px; margin-bottom: 25px; }
+        
         .stream-wrapper { 
             width: 100%; aspect-ratio: 16 / 9; 
             border: 2px solid var(--accent); border-radius: 4px; 
