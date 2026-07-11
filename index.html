@@ -15,28 +15,33 @@
 
     <div class="login-container" id="app">
         <h1>Anmelden</h1>
-        <button onclick="loginWithProvider('twitch')" class="btn-twitch">
+        <button onclick="performLogin()" class="btn-twitch">
             Mit Twitch anmelden
         </button>
     </div>
 
     <script>
-        const supabase = supabase.createClient(
+        // Wir nutzen einen anderen Namen für die Konstante, um Kollisionen zu vermeiden
+        const sbClient = supabase.createClient(
             "https://dvttzclfrfufhjqdyswu.supabase.co", 
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR2dHR6Y2xmcmZ1ZmhqcWR5c3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEzNzMxNjIsImV4cCI6MjA2Njk0OTE2Mn0.zC6iW72r4i3yvO03A0C8-555"
         );
 
-        supabase.auth.onAuthStateChange((event, session) => {
+        // Prüfung, ob wir gerade vom Login zurückkommen
+        sbClient.auth.onAuthStateChange((event, session) => {
             if (session) {
                 document.getElementById('app').innerHTML = "<h1>Erfolgreich angemeldet!</h1><p>Willkommen, " + session.user.user_metadata.name + "</p>";
             }
         });
 
-        async function loginWithProvider(provider) {
-            await supabase.auth.signInWithOAuth({
-                provider: provider,
+        async function performLogin() {
+            const { error } = await sbClient.auth.signInWithOAuth({
+                provider: 'twitch',
                 options: { redirectTo: "https://mein-pc-setup.vercel.app" }
             });
+            if (error) {
+                alert("Login fehlgeschlagen: " + error.message);
+            }
         }
     </script>
 </body>
