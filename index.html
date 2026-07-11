@@ -12,16 +12,22 @@
         h2 { color: var(--accent); text-align: center; margin-top: 40px; margin-bottom: 25px; }
         
         .stream-wrapper { 
-            width: 100%; aspect-ratio: 16 / 9; 
-            border: 2px solid var(--accent); border-radius: 4px; 
-            overflow: hidden; background: #000; margin-bottom: 10px;
+            width: 100%; 
+            aspect-ratio: 16 / 9; 
+            border: 2px solid var(--accent); 
+            border-radius: 4px; 
+            overflow: hidden; 
+            background: #000; 
+            margin-bottom: 10px;
+            line-height: 0; /* Verhindert Überstehen durch Zeilenhöhe */
         }
         .stream-wrapper iframe { width: 100%; height: 100%; display: block; border: none; }
         
-        .chat-button { 
+        .chat-link { 
             display: block; width: 100%; padding: 15px; margin-bottom: 40px;
             background: var(--accent); color: white; text-align: center; 
             font-weight: bold; text-decoration: none; border-radius: 4px; 
+            box-sizing: border-box; /* Stellt sicher, dass Padding nicht die Breite sprengt */
         }
         
         .hardware-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
@@ -41,30 +47,30 @@
             <iframe src="https://player.twitch.tv/?channel=trinoo&parent=mein-pc-setup.vercel.app" allowfullscreen></iframe>
         </div>
         
-        <a href="https://www.twitch.tv/popout/trinoo/chat" class="chat-button" target="_blank">Zum Chat</a>
+        <a href="https://www.twitch.tv/popout/trinoo/chat" class="chat-link" target="_blank">Zum Chat</a>
 
         <h2>Mein Gaming Setup</h2>
         <div class="hardware-grid">
-            <div class="card"><strong>CPU:</strong><br><a href="https://amzn.to/4o0S9kM">AMD Ryzen 7 9800X3D</a></div>
-            <div class="card"><strong>CPU Kühler:</strong><br><a href="https://amzn.to/42GQicb">Arctic Liquid Freezer III 420 A-RGB</a></div>
-            <div class="card"><strong>GPU:</strong><br><a href="https://amzn.to/47qTQSu">MSI GeForce RTX 5080 16G Suprim SOC</a></div>
-            <div class="card"><strong>Mainboard:</strong><br><a href="https://amzn.to/42HENBe">MSI MAG X670E Tomahawk WIFI</a></div>
-            <div class="card"><strong>RAM:</strong><br><a href="https://amzn.to/4nROl4X">Adata XPG Lancer - 6400 MHz - 64 GB</a></div>
-            <div class="card"><strong>Main Monitor:</strong><br><a href="https://amazon.de/dp/B09CD32DNH?tag=twitchtrino0a-21">Asus ROG Strix OLED XG27AQDMGR</a></div>
-            <div class="card"><strong>Side Monitore:</strong><br><a href="https://amzn.to/42HEOoM">3x 27" Iiyama Red Eagle G2770QSU</a></div>
-            <div class="card"><strong>Monitorhalterung:</strong><br><a href="https://amzn.to/3JfqJs3">Huanuo TS3</a></div>
-            <div class="card"><strong>Soundkarte:</strong><br><a href="https://amzn.to/47nmjbP">Creative Sound BlasterX AE-5 Plus</a></div>
-            <div class="card"><strong>Kopfhörer:</strong><br><a href="https://amzn.to/4qhYda6">Beyerdynamic DT 990 Pro - 250 Ω</a></div>
-            <div class="card"><strong>Mikrofon:</strong><br><a href="https://amzn.to/4vNLmyy">Røde NT-USB+</a></div>
-            <div class="card"><strong>Mikrofonarm:</strong><br><a href="https://amzn.to/47s7WTy">InnoGear Boom Arm</a></div>
-            <div class="card"><strong>Maus:</strong><br><a href="https://amzn.to/3Pgiij1">Razer Naga V2 Pro</a></div>
-            <div class="card"><strong>Mauspad:</strong><br><a href="https://amzn.to/4vlpB8g">CSL - Titanwolf 1200x600mm</a></div>
-            <div class="card"><strong>Tastatur:</strong><br><a href="https://amzn.to/4yiOAfl">be quiet! Light Mount</a></div>
-            <div class="card"><strong>Gamepad:</strong><br><a href="https://amzn.to/3QXZSol">GameSir Cyclone 2</a></div>
-            <div class="card"><strong>Netzteil:</strong><br><a href="https://amzn.to/3KT9PzR">SeaSonic Vertex GX-1200 80+ Gold</a></div>
-            <div class="card"><strong>Tower:</strong><br><a href="https://amzn.to/4n3a34P">Be Quiet! Light Base 900 DX</a></div>
-            <div class="card"><strong>Webcam:</strong><br><a href="https://amzn.to/4swkEZv">Elgato Facecam 4K</a></div>
-            <div class="card"><strong>Gaming-Stuhl:</strong><br><a href="https://amzn.to/3JeVfSO">AKRacing Master Max</a></div>
+            <div class="card"><strong>CPU:</strong> <a href="https://amzn.to/4o0S9kM">AMD Ryzen 7 9800X3D</a></div>
+            <div class="card"><strong>CPU Kühler:</strong> <a href="https://amzn.to/42GQicb">Arctic Liquid Freezer III 420 A-RGB</a></div>
+            <div class="card"><strong>GPU:</strong> <a href="https://amzn.to/47qTQSu">MSI GeForce RTX 5080 16G Suprim SOC</a></div>
+            <div class="card"><strong>Mainboard:</strong> <a href="https://amzn.to/42HENBe">MSI MAG X670E Tomahawk WIFI</a></div>
+            <div class="card"><strong>RAM:</strong> <a href="https://amzn.to/4nROl4X">Adata XPG Lancer - 6400 MHz - 64 GB</a></div>
+            <div class="card"><strong>Main Monitor:</strong> <a href="https://amazon.de/dp/B09CD32DNH?tag=twitchtrino0a-21">Asus ROG Strix OLED XG27AQDMGR</a></div>
+            <div class="card"><strong>Side Monitore:</strong> <a href="https://amzn.to/42HEOoM">3x 27" Iiyama Red Eagle G2770QSU</a></div>
+            <div class="card"><strong>Monitorhalterung:</strong> <a href="https://amzn.to/3JfqJs3">Huanuo TS3</a></div>
+            <div class="card"><strong>Soundkarte:</strong> <a href="https://amzn.to/47nmjbP">Creative Sound BlasterX AE-5 Plus</a></div>
+            <div class="card"><strong>Kopfhörer:</strong> <a href="https://amzn.to/4qhYda6">Beyerdynamic DT 990 Pro - 250 Ω</a></div>
+            <div class="card"><strong>Mikrofon:</strong> <a href="https://amzn.to/4vNLmyy">Røde NT-USB+</a></div>
+            <div class="card"><strong>Mikrofonarm:</strong> <a href="https://amzn.to/47s7WTy">InnoGear Boom Arm</a></div>
+            <div class="card"><strong>Maus:</strong> <a href="https://amzn.to/3Pgiij1">Razer Naga V2 Pro</a></div>
+            <div class="card"><strong>Mauspad:</strong> <a href="https://amzn.to/4vlpB8g">CSL - Titanwolf 1200x600mm</a></div>
+            <div class="card"><strong>Tastatur:</strong> <a href="https://amzn.to/4yiOAfl">be quiet! Light Mount</a></div>
+            <div class="card"><strong>Gamepad:</strong> <a href="https://amzn.to/3QXZSol">GameSir Cyclone 2</a></div>
+            <div class="card"><strong>Netzteil:</strong> <a href="https://amzn.to/3KT9PzR">SeaSonic Vertex GX-1200 80+ Gold</a></div>
+            <div class="card"><strong>Tower:</strong> <a href="https://amzn.to/4n3a34P">Be Quiet! Light Base 900 DX</a></div>
+            <div class="card"><strong>Webcam:</strong> <a href="https://amzn.to/4swkEZv">Elgato Facecam 4K</a></div>
+            <div class="card"><strong>Gaming-Stuhl:</strong> <a href="https://amzn.to/3JeVfSO">AKRacing Master Max</a></div>
         </div>
         
         <p class="disclaimer">Hinweis: Bei den oben genannten Links handelt es sich um Affiliate-Links. Wenn du über diese Links einkaufst, erhalte ich eine kleine Provision, ohne dass für dich zusätzliche Kosten entstehen.</p>
