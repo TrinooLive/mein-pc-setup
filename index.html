@@ -39,7 +39,7 @@
             box-shadow: 0 0 25px rgba(145, 70, 255, 0.6);
         }
 
-        /* Container für Login und Formular */
+        /* Container für Login und Formular / Profil */
         .setup-container {
             max-width: 500px;
             margin: 0 auto 40px auto;
@@ -187,6 +187,8 @@
             padding-bottom: 8px;
             margin-bottom: 15px;
         }
+        
+        /* Klickbare Setup Card */
         .setup-card {
             background: #1a1a1a;
             border: 1px solid #333;
@@ -194,6 +196,15 @@
             padding: 15px;
             margin-bottom: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: transform 0.2s, border-color 0.2s;
+            cursor: pointer;
+        }
+        .setup-card:hover {
+            transform: translateY(-2px);
+            border-color: #00ff88;
         }
         .setup-card-header {
             font-size: 0.85rem;
@@ -201,6 +212,12 @@
             margin-bottom: 10px;
             border-bottom: 1px dashed #2a2a2a;
             padding-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .view-profile-hint {
+            color: #00ff88;
+            font-size: 0.8rem;
         }
         .component-line {
             margin: 6px 0;
@@ -212,6 +229,44 @@
             display: inline-block;
             width: 50px;
         }
+
+        /* Profil Ansicht Styling */
+        .profil-view {
+            display: none;
+        }
+        .profil-view.active {
+            display: block;
+        }
+        .back-btn {
+            display: inline-block;
+            background: #333;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .back-btn:hover { background: #444; }
+        .profil-spec-box {
+            background: #252525;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #00ff88;
+            margin-bottom: 25px;
+        }
+        .profil-spec-box .component-line {
+            font-size: 1.2rem;
+            margin: 15px 0;
+        }
+        .profil-spec-box .component-label {
+            width: 70px;
+            color: #00ff88;
+        }
     </style>
 </head>
 <body>
@@ -221,7 +276,8 @@
     
     <a href="https://twitch.tv/Trinoo" target="_blank" class="twitch-btn">👾 Besuche den Stream</a>
 
-    <div class="setup-container">
+    <!-- STANDARD ANSICHT: FORMULAR -->
+    <div class="setup-container" id="mainFormContainer">
         <h2>Setup einreichen</h2>
         
         <!-- Login Sektion -->
@@ -262,9 +318,24 @@
         </div>
     </div>
 
-    <!-- EINGEREICHTE SETUPS LISTE -->
-    <div class="list-container">
-        <h3>🖥️ Eingereichte Community-Setups</h3>
+    <!-- EINZELPROFIL ANSICHT (Standardmäßig versteckt) -->
+    <div class="setup-container profil-view" id="profilContainer">
+        <button class="back-btn" onclick="zurueckZurStartseite()">⬅ Zurück zur Übersicht</button>
+        <h2 id="profilTitle">PC Setup von Zuschauer</h2>
+        <p style="color: #888; font-size: 0.9rem;" id="profilMeta">Eingereicht am ...</p>
+        
+        <div class="profil-spec-box">
+            <div class="component-line"><span class="component-label">CPU:</span> <span id="profilCpu" style="font-weight: bold;">...</span></div>
+            <div class="component-line"><span class="component-label">GPU:</span> <span id="profilGpu" style="font-weight: bold;">...</span></div>
+            <div class="component-line"><span class="component-label">RAM:</span> <span id="profilRam" style="font-weight: bold;">...</span></div>
+        </div>
+        
+        <p style="color: #666; font-size: 0.85rem; text-align: center;">Teile dieses Setup mit dem Link im Browser! 🔗</p>
+    </div>
+
+    <!-- EINGEREICHTE SETUPS LISTE (Wird nur auf der Startseite gebraucht) -->
+    <div class="list-container" id="communityListContainer">
+        <h3>🖥️ Die 3 neuesten Community-Setups</h3>
         <div id="setupsList">
             <p style="color: #666; text-align: center;">Lade Setups aus der Datenbank...</p>
         </div>
@@ -277,9 +348,18 @@
         
         const dbClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Beim Laden der Seite direkt die vorhandenen Setups holen
+        // Routing-Check beim Laden der Seite
         window.onload = function() {
-            setupsAbrufen();
+            const urlParams = new URLSearchParams(window.location.search);
+            const setupId = urlParams.get('id');
+
+            if (setupId) {
+                // Wenn ein ?id=X in der URL steht -> Profil laden
+                profilAbrufen(setupId);
+            } else {
+                // Sonst normale Startseite laden
+                setupsAbrufen();
+            }
         };
 
         function testLogin() {
@@ -294,12 +374,13 @@
             document.getElementById('formArea').classList.remove('unlocked');
         }
 
-        // Holt alle Setups sortiert nach dem neuesten Eintrag ab
+        // Holt die LETZTEN 3 Setups ab
         async function setupsAbrufen() {
             const { data, error } = await dbClient
                 .from('setups')
                 .select('*')
-                .order('id', { ascending: false });
+                .order('id', { ascending: false })
+                .limit(3); // FIX: Genau 3 Setups maximal!
 
             if (error) {
                 document.getElementById('setupsList').innerHTML = `<p style="color: #ff4444;">Fehler beim Laden: ${error.message}</p>`;
@@ -307,33 +388,67 @@
             }
 
             if (!data || data.length === 0) {
-                document.getElementById('setupsList').innerHTML = '<p style="color: #666; text-align: center;">Noch keine Setups eingetragen. Mach den ersten Schritt!</p>';
+                document.getElementById('setupsList').innerHTML = '<p style="color: #666; text-align: center;">Noch keine Setups eingetragen.</p>';
                 return;
             }
 
-            // HTML für die Liste generieren
             let listHtml = '';
-            data.forEach((setup, index) => {
-                // Erstellt ein lesbares Datum
+            data.forEach((setup) => {
                 const eintragDatum = new Date(setup.created_at).toLocaleString('de-DE', { 
-                    day: '2-digit', 
-                    month: '2-digit', 
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
+                    day: '2-digit', month: '2-digit', year: 'numeric'
                 });
 
+                // Die Card verlinkt jetzt per URL-Parameter auf sich selbst (?id=...)
                 listHtml += `
-                    <div class="setup-card">
-                        <div class="setup-card-header">💾 Eingereicht am ${eintragDatum} # ${setup.id}</div>
+                    <a href="?id=${setup.id}" class="setup-card">
+                        <div class="setup-card-header">
+                            <span>💾 Setup #${setup.id} - ${eintragDatum}</span>
+                            <span class="view-profile-hint">Profil anzeigen ➔</span>
+                        </div>
                         <div class="component-line"><span class="component-label">CPU:</span> ${setup.cpu}</div>
                         <div class="component-line"><span class="component-label">GPU:</span> ${setup.gpu}</div>
                         <div class="component-line"><span class="component-label">RAM:</span> ${setup.ram}</div>
-                    </div>
+                    </a>
                 `;
             });
 
             document.getElementById('setupsList').innerHTML = listHtml;
+        }
+
+        // Holt GENAU EIN Setup für die Profilseite
+        async function profilAbrufen(id) {
+            // Ansichten umschalten
+            document.getElementById('mainFormContainer').style.display = 'none';
+            document.getElementById('communityListContainer').style.display = 'none';
+            document.getElementById('profilContainer').classList.add('active');
+
+            const { data, error } = await dbClient
+                .from('setups')
+                .select('*')
+                .eq('id', id)
+                .single(); // Nur einen Datensatz erwarten
+
+            if (error || !data) {
+                document.getElementById('profilTitle').innerText = "Setup nicht gefunden!";
+                document.getElementById('profilMeta').innerText = "Dieser Eintrag existiert leider nicht.";
+                return;
+            }
+
+            const eintragDatum = new Date(data.created_at).toLocaleString('de-DE', { 
+                day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
+
+            // Profildaten ins HTML schreiben
+            document.getElementById('profilTitle').innerText = `PC Setup #${data.id}`;
+            document.getElementById('profilMeta').innerText = `In die Datenbank eingetragen am ${eintragDatum}`;
+            document.getElementById('profilCpu').innerText = data.cpu;
+            document.getElementById('profilGpu').innerText = data.gpu;
+            document.getElementById('profilRam').innerText = data.ram;
+        }
+
+        function zurueckZurStartseite() {
+            // Entfernt den URL-Parameter und lädt die Startseite sauber neu
+            window.location.href = window.location.origin + window.location.pathname;
         }
 
         async function setupAbschicken() {
@@ -348,12 +463,10 @@
             if (error) {
                 alert("Fehler beim Speichern: " + error.message);
             } else {
-                alert("Boom! Dein Setup wurde bombensicher in deiner Postgres-Datenbank gespeichert! 🖥️🔥");
+                alert("Boom! Dein Setup wurde bombensicher gespeichert! 🖥️🔥");
                 document.getElementById('prozessor').value = '';
                 document.getElementById('grafikkarte').value = '';
                 document.getElementById('ram').value = '';
-                
-                // Liste sofort aktualisieren, damit das neue Setup direkt unten erscheint
                 setupsAbrufen();
             }
         }
