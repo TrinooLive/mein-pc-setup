@@ -20,6 +20,7 @@
         h1 { color: #00ff88; margin-bottom: 5px; }
         .subtitle { color: #888; font-size: 1.2rem; margin-top: 0; margin-bottom: 20px; }
         
+        /* Global Community Stats Bar */
         .stats-bar {
             display: flex;
             justify-content: center;
@@ -52,7 +53,7 @@
             animation: pulse 1.5s infinite;
         }
         @keyframes pulse {
-            0% { transform: scale(0.9); opacity: 0.6; }
+            0 { transform: scale(0.9); opacity: 0.6; }
             50% { transform: scale(1.2); opacity: 1; }
             100% { transform: scale(0.9); opacity: 0.6; }
         }
@@ -68,6 +69,7 @@
             margin-bottom: 30px;
         }
 
+        /* Container & Forms */
         .setup-container {
             max-width: 500px;
             margin: 0 auto 40px auto;
@@ -108,6 +110,7 @@
             min-height: 200px;
         }
 
+        /* Sterne Bewertung */
         .rating-box {
             background: #222;
             padding: 15px;
@@ -130,42 +133,41 @@
             color: #ffcc00;
         }
 
-        /* --- Social Login Buttons --- */
-        .oauth-group {
-            display: flex;
-            flex-direction: column;
+        /* Schlanke Social Login Sektion */
+        .social-login-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         .auth-btn {
-            width: 100%;
-            padding: 12px;
+            padding: 10px;
+            background: #333;
+            color: #fff;
             border: none;
             cursor: pointer;
             font-weight: bold;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-size: 0.95rem;
-            transition: opacity 0.2s;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 0.9rem;
         }
-        .auth-btn:hover { opacity: 0.9; }
-        
+        .auth-btn:hover { background: #444; }
         .btn-twitch { background: #9146FF; color: white; }
-        .btn-google { background: #ffffff; color: #222; border: 1px solid #ccc; }
-        .btn-apple { background: #000000; color: white; }
-        .btn-email-submit { background: #444; color: white; }
-
+        .btn-twitch:hover { background: #772ce8; }
+        .btn-google { background: #fff; color: #111; }
+        .btn-google:hover { background: #eee; }
+        .btn-apple { background: #000; color: #fff; border: 1px solid #333; }
+        .btn-apple:hover { background: #222; }
+        
+        /* Schlanke E-Mail Eingabe */
         .auth-input {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             margin-bottom: 10px;
             background: #252525;
             border: 1px solid #444;
             color: #fff;
-            border-radius: 5px;
+            border-radius: 4px;
             box-sizing: border-box;
         }
         
@@ -225,6 +227,7 @@
     <h1>Twitch.tv/Trinoo</h1>
     <p class="subtitle">Community-Projekt</p>
 
+    <!-- REAL COMMUNITY STATS BAR -->
     <div class="stats-bar">
         <div class="stat-item">
             <span>Community Setups:</span>
@@ -240,28 +243,30 @@
     
     <a href="https://twitch.tv/Trinoo" target="_blank" class="twitch-btn">👾 Besuche den Stream</a>
 
-    <!-- FORMULAR / AUTH -->
+    <!-- FORMULAR / ECHTES AUTH -->
     <div class="setup-container" id="mainFormContainer">
         <h2>Setup einreichen</h2>
         
-        <!-- LOGIN INTERFACE -->
+        <!-- COMPACT AUTH SECTION -->
         <div class="login-section" id="loginSection">
-            <div class="oauth-group">
-                <button class="auth-btn btn-twitch" onclick="loginMitOAuth('twitch')">👾 Mit Twitch einloggen</button>
-                <button class="auth-btn btn-google" onclick="loginMitOAuth('google')">🌐 Mit Google einloggen</button>
-                <button class="auth-btn btn-apple" onclick="loginMitOAuth('apple')">🍏 Mit Apple einloggen</button>
+            <!-- Social Logins nebeneinander in einer Reihe -->
+            <div class="social-login-grid">
+                <button class="auth-btn btn-twitch" onclick="loginMitOAuth('twitch')">Twitch</button>
+                <button class="auth-btn btn-google" onclick="loginMitOAuth('google')">Google</button>
+                <button class="auth-btn btn-apple" onclick="loginMitOAuth('apple')">Apple</button>
             </div>
             
-            <div style="text-align:center; margin: 15px 0; color: #666; font-size:0.8rem; font-weight: bold;">ODER TRADITIONELL PER E-MAIL</div>
-            <input type="email" id="authEmail" class="auth-input" placeholder="Deine E-Mail-Adresse">
+            <div style="text-align:center; margin: 8px 0; color: #555; font-size:0.75rem; font-weight: bold;">ODER MIT EMAIL</div>
+            <input type="email" id="authEmail" class="auth-input" placeholder="Deine E-Mail">
             <input type="password" id="authPassword" class="auth-input" placeholder="Passwort">
-            <button class="auth-btn btn-email-submit" onclick="loginMitEmail()">Einloggen</button>
-            <button class="auth-btn" style="background:none; color:#aaa; font-size:0.8rem; text-decoration: underline;" onclick="registrierenMitEmail()">Neu registrieren</button>
+            
+            <button class="auth-btn" style="width: 100%; margin-bottom: 6px;" onclick="loginMitEmail()">Einloggen</button>
+            <button class="auth-btn" style="background:none; color:#888; font-size:0.8rem; width: 100%; padding: 4px;" onclick="registrierenMitEmail()">Konto registrieren</button>
         </div>
 
         <div class="user-status" id="userStatus">
-            🟢 Aktiv eingeloggt als:<br><span id="username" style="color: #00ff88; font-weight: bold;">...</span>
-            <br><br>
+            🟢 Eingeloggt als: <span id="username" style="color: #00ff88;">...</span>
+            <br>
             <button class="logout-btn" onclick="logout()">[ Abmelden ]</button>
         </div>
         
@@ -275,12 +280,13 @@
         </div>
     </div>
 
-    <!-- PROFIL ANSICHT -->
+    <!-- PROFIL ANSICHT MIT VIEWS & RATING -->
     <div class="setup-container profil-view profil-view-layout" id="profilContainer">
-        <button class="auth-btn" style="width:auto; display:inline-block; background: #222;" onclick="zurueckZurStartseite()">⬅ Zurück zur Übersicht</button>
+        <button class="auth-btn" style="width:auto; display:inline-block; background:#222; margin-bottom:15px;" onclick="zurueckZurStartseite()">⬅ Zurück</button>
+        
         <h2 id="profilTitle">PC Setup</h2>
         
-        <p style="font-size: 1rem; color: #00ff88;">
+        <p style="font-size: 1rem; color: #00ff88; margin-bottom:20px;">
             👁️ <span id="viewCount">0</span> Views | ⭐ Durchschnitt: <span id="avgRating">0.0</span>/5 (<span id="totalVotes">0</span> Stimmen)
         </p>
         
@@ -350,7 +356,7 @@
                 provider: providerName,
                 options: { redirectTo: window.location.origin + window.location.pathname }
             });
-            if (error) alert("OAuth Fehler: " + error.message + "\nHast du diesen Provider im Supabase Dashboard aktiviert?");
+            if (error) alert("OAuth Fehler: " + error.message + "\nHast du diesen Provider im Supabase Dashboard unter Authentication -> Providers aktiviert?");
         }
 
         async function loginMitEmail() {
@@ -365,14 +371,14 @@
             const password = document.getElementById('authPassword').value;
             const { error } = await dbClient.auth.signUp({ email, password });
             if (error) alert("Registrierungs-Fehler: " + error.message);
-            else alert("Registrierung angestoßen! Falls 'Email Confirmation' aktiv ist, prüfe dein Postfach.");
+            else alert("Registrierung erfolgreich! Bitte schaue in dein E-Mail-Postfach für den Bestätigungslink.");
         }
 
         function userEinloggenStatus(user) {
             currentUser = user;
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('userStatus').style.display = 'block';
-            document.getElementById('username').innerText = user.email || user.user_metadata.full_name || user.id;
+            document.getElementById('username').innerText = user.email || (user.user_metadata ? user.user_metadata.full_name : user.id);
             document.getElementById('formArea').classList.add('unlocked');
             if(document.getElementById('ratingStatus')) {
                 document.getElementById('ratingStatus').innerText = "Klicke auf die Sterne, um abzustimmen.";
