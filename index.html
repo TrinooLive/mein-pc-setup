@@ -26,7 +26,6 @@
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR2dHR6Y2xmcmZ1ZmhqcWR5c3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEzNzMxNjIsImV4cCI6MjA2Njk0OTE2Mn0.zC6iW72r4i3yvO03A0C8-555"
         );
 
-        // Automatische Prüfung auf Token in der URL
         supabase.auth.onAuthStateChange((event, session) => {
             if (session) {
                 document.getElementById('app').innerHTML = "<h1>Erfolgreich angemeldet!</h1><p>Willkommen, " + session.user.user_metadata.name + "</p>";
