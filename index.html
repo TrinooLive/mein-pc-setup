@@ -229,21 +229,19 @@
     </div>
 
     <script>
-        // 1. HIER DEINE EIGENEN SUPABASE CREDENTIALS EINTRAGEN
-        const SUPABASE_URL = "https://dvttzclfrfufhjqdyswu.supabase.co";
-        const SUPABASE_ANON_KEY = "DEIN_SUPABASE_ANON_KEY_HIER_EINFÜGEN";
-
-        // Supabase Client initialisieren
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Direkt initialisiert mit deinen echten Projektdaten
+        const supabaseClient = supabase.createClient(
+            "https://dvttzclfrfufhjqdyswu.supabase.co", 
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR2dHR6Y2xmcmZ1ZmhqcWR5c3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEzNzMxNjIsImV4cCI6MjA2Njk0OTE2Mn0.zC6iW72r4i3yvO03A0C8-555"
+        );
 
         let isLoginMode = true;
 
         // Funktion für Social Logins (Twitch, Discord, Google)
         async function loginWithProvider(provider) {
-            const { data, error } = await supabase.auth.signInWithOAuth({
+            const { data, error } = await supabaseClient.auth.signInWithOAuth({
                 provider: provider,
                 options: {
-                    // Leitet den User nach dem Login zurück auf deine Seite
                     redirectTo: window.location.origin
                 }
             });
@@ -262,7 +260,7 @@
 
             if (isLoginMode) {
                 // Einloggen
-                const { data, error } = await supabase.auth.signInWithPassword({
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
                     email: email,
                     password: password
                 });
@@ -271,12 +269,10 @@
                     showMessage(error.message, true);
                 } else {
                     showMessage("Erfolgreich eingeloggt! Du wirst weitergeleitet...", false);
-                    // Hier kannst du den User zu seiner Dashboard-Unterseite schicken:
-                    // window.location.href = '/dashboard.html';
                 }
             } else {
-                // Registrieren (Da "Confirm Email" aus ist, loggt Supabase den User hiernach SOFORT ein!)
-                const { data, error } = await supabase.auth.signUp({
+                // Registrieren
+                const { data, error } = await supabaseClient.auth.signUp({
                     email: email,
                     password: password
                 });
@@ -323,10 +319,9 @@
 
         // Checken, ob der User bereits eingeloggt ist, wenn er die Seite öffnet
         async function checkUser() {
-            const { data: { user } } = await supabase.auth.getUser();
+            const { data: { user } } = await supabaseClient.auth.getUser();
             if (user) {
                 console.log("User ist eingeloggt:", user);
-                // Optional: Hier direkt zum geschützten Bereich weiterleiten
             }
         }
         checkUser();
