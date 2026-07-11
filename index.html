@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Twitch.tv/Trinoo | PC-Setups</title>
+    <title>Twitch.tv/Trinoo | PC-Setups Platform</title>
     
     <!-- Supabase JS Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -271,7 +271,7 @@
             display: block;
         }
 
-        /* Submit Button */
+        /* Buttons */
         .submit-btn {
             width: 100%;
             background: #00ff88;
@@ -287,6 +287,24 @@
         .submit-btn:hover {
             background: #00cc6e;
             box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+        }
+
+        .edit-action-btn {
+            background: #222;
+            border: 1px solid #00ff88;
+            color: #00ff88;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.85rem;
+            float: right;
+            margin-top: -38px;
+            transition: all 0.2s;
+        }
+        .edit-action-btn:hover {
+            background: #00ff88;
+            color: #111;
         }
 
         /* Community Liste Bereich */
@@ -412,8 +430,24 @@
             color: #00ff88;
             display: inline-block;
         }
+        
+        /* Inline Edit Styling */
+        .edit-input-field {
+            background: #111;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-size: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .edit-input-field:focus {
+            border-color: #00ff88;
+            outline: none;
+        }
 
-        /* ADMIN COPY AREA */
+        /* ADMIN AREA */
         .admin-copy-container {
             max-width: 500px;
             margin: 60px auto 20px auto;
@@ -441,7 +475,7 @@
         <button class="lang-btn" id="btnLangEn" onclick="setLanguage('en')">🇬🇧 EN</button>
     </div>
 
-    <!-- Geo-IP Smart Popup (Wird nur getriggert, wenn Sprache nicht matched) -->
+    <!-- Geo-IP Smart Popup -->
     <div class="geo-popup" id="geoPopup">
         <span id="geoPopupText">Switch to English?</span>
         <button id="geoPopupActionBtn" onclick="acceptGeoLanguage()">Yes</button>
@@ -565,22 +599,25 @@
         </div>
     </div>
 
-    <!-- ZWEISPALTIGE EINZELPROFIL ANSICHT -->
+    <!-- ZWEISPALTIGE EINZELPROFIL ANSICHT & EDIT MODE -->
     <div class="setup-container profil-view profil-view-layout" id="profilContainer">
         <button class="back-btn" onclick="zurueckZurStartseite()" data-i18n="backBtn">⬅ Zurück zur Übersicht</button>
+        
+        <!-- Dynamischer Bearbeitungs-Button (nur sichtbar für den Eigentümer) -->
+        <button class="edit-action-btn" id="profileEditBtn" onclick="toggleEditMode()" style="display: none;" data-i18n="editBtnTxt">Bearbeiten 🛠️</button>
+        
         <h2 id="profilTitle">PC Setup</h2>
         <p style="color: #888; font-size: 0.9rem; margin-bottom: 20px;" id="profilMeta">...</p>
         
         <div class="profile-grid">
-            <!-- Linke Spalte: Smarte Hardware-Liste -->
+            <!-- Linke Spalte: Smarte Hardware-Liste (wird via JS befüllt oder in Inputs verwandelt) -->
             <div class="profil-spec-box" id="hardwareSpecBox"></div>
             
-            <!-- Rechte Spalte: Bilder Platzhalter -->
+            <!-- Rechte Spalte: Bilder Platzhalter & Interaktion -->
             <div>
-                <div class="media-box" id="mediaBoxContainer">
-                    <!-- Wird via JS übersetzt -->
-                </div>
+                <div class="media-box" id="mediaBoxContainer"></div>
                 <button class="share-btn" id="shareBtn" onclick="linkKopieren()" data-i18n="copyLinkBtn">Setup-Link kopieren 📋</button>
+                <button class="share-btn" id="saveEditBtn" onclick="saveSetupChanges()" style="display: none; background: #00ff88; color: #111;" data-i18n="saveBtnTxt">Änderungen speichern 💾</button>
             </div>
         </div>
     </div>
@@ -593,7 +630,7 @@
 
     <!-- ADMIN AREA -->
     <div class="admin-copy-container">
-        <button class="admin-copy-btn" id="adminCopyBtn" onclick="quellcodeKopieren()">➔ Ganzen Quellcode für ChatGPT kopieren 🛠️</button>
+        <button class="admin-copy-btn" id="adminCopyBtn" onclick="quellcodeKopieren()">➔ Ganzen Quellcode für Gemini kopieren 🛠️</button>
     </div>
 
     <!-- LOGIK & SPRACHUMSCHALTUNG -->
@@ -604,8 +641,10 @@
 
         let aktuelleSprache = 'de';
         let geoVorgeschlageneSprache = '';
+        let isLoggedIn = false;
+        let aktuellesGeladenesSetup = null;
+        let istImEditModus = false;
 
-        // ÜBERSETZUNGS-DATENBANK (DICTIONARY)
         const translations = {
             de: {
                 mainTitle: "Twitch.tv/Trinoo",
@@ -650,7 +689,11 @@
                 mediaTitle: "<strong>Bilder-Galerie kommt bald!</strong>",
                 mediaDesc: "In Kürze können hier Fotos direkt hochgeladen werden.",
                 alertSuccess: "Boom! Dein Setup wurde bombensicher gespeichert! 🖥️🔥",
-                geoSuggest: "Auf Englisch umschalten?"
+                geoSuggest: "Auf Englisch umschalten?",
+                editBtnTxt: "Bearbeiten 🛠️",
+                cancelBtnTxt: "Abbrechen ✕",
+                saveBtnTxt: "Änderungen speichern 💾",
+                updateSuccess: "Setup erfolgreich aktualisiert! 📋✨"
             },
             en: {
                 mainTitle: "Twitch.tv/Trinoo",
@@ -695,11 +738,14 @@
                 mediaTitle: "<strong>Image Gallery Coming Soon!</strong>",
                 mediaDesc: "Soon you will be able to upload photos here directly.",
                 alertSuccess: "Boom! Your setup has been saved securely! 🖥️🔥",
-                geoSuggest: "Switch website to English?"
+                geoSuggest: "Switch website to English?",
+                editBtnTxt: "Edit Setup 🛠️",
+                cancelBtnTxt: "Cancel ✕",
+                saveBtnTxt: "Save Changes 💾",
+                updateSuccess: "Setup updated successfully! 📋✨"
             }
         };
 
-        // Hardware Labels Mapping für Profilansicht
         const hardwareLabels = {
             cpu: { de: "Prozessor:", en: "Processor:" },
             gpu: { de: "Grafikkarte:", en: "Graphics Card:" },
@@ -722,11 +768,21 @@
             accessories: { de: "Zubehör:", en: "Accessories:" }
         };
 
-        window.onload = function() {
-            // 1. IP-Ländererkennung starten
-            detectUserLocation();
+        // Alle verfügbaren Hardware-Felder im System
+        const fieldsMapConfig = [
+            { key: 'cpu', required: true }, { key: 'gpu', required: true }, { key: 'ram', required: true },
+            { key: 'mainboard' }, { key: 'kuehler' }, { key: 'festplatte' }, { key: 'gehaeuse' },
+            { key: 'case_fan' }, { key: 'netzteil' }, { key: 'cablemod' }, { key: 'monitor' },
+            { key: 'keyboard' }, { key: 'mouse' }, { key: 'headset' }, { key: 'sound' },
+            { key: 'webcam' }, { key: 'chair' }, { key: 'desk' }, { key: 'accessories' }
+        ];
 
-            // 2. URL Checken & Rendern
+        window.onload = function() {
+            // Prüfen ob bereits eine Test-Session im LocalStorage existiert
+            if(localStorage.getItem('trinoo_tester_logged') === 'true') {
+                activateTestLoginState();
+            }
+            detectUserLocation();
             renderPageBasedOnUrl();
         };
 
@@ -734,7 +790,6 @@
             const urlParams = new URLSearchParams(window.location.search);
             const setupId = urlParams.get('id');
 
-            // Grundlegende UI Übersetzungen laden
             applyTranslations();
 
             if (setupId) {
@@ -744,20 +799,21 @@
             }
         }
 
-        // FUNKTION: Sprache wechseln & UI updaten
         function setLanguage(lang) {
             aktuelleSprache = lang;
             
-            // Buttons Visuell anpassen
             document.getElementById('btnLangDe').classList.remove('active');
             document.getElementById('btnLangEn').classList.remove('active');
             if(lang === 'de') document.getElementById('btnLangDe').classList.add('active');
             if(lang === 'en') document.getElementById('btnLangEn').classList.add('active');
 
-            // Übersetzungen anwenden
             applyTranslations();
 
-            // Wenn wir uns im Profil befinden, Hardware-Liste neu zeichnen
+            if(istImEditModus) {
+                // Wenn im Edit-Modus, nur Labels neu übersetzen, nicht neu laden um Inputverlust zu meiden
+                return; 
+            }
+
             const urlParams = new URLSearchParams(window.location.search);
             const setupId = urlParams.get('id');
             if (setupId) {
@@ -770,11 +826,9 @@
         function applyTranslations() {
             const t = translations[aktuelleSprache];
             
-            // Standard Elemente mit data-i18n Attribut übersetzen
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (t[key]) {
-                    // Falls es der Toggle-Button ist, aufpassen wegen Zustand
                     if (key === 'toggleMore' && document.getElementById('optionalFields').classList.contains('show')) {
                         el.innerText = t['toggleLess'];
                     } else {
@@ -783,7 +837,6 @@
                 }
             });
 
-            // Medienbox statisch auffrischen
             const mediaBox = document.getElementById('mediaBoxContainer');
             if (mediaBox) {
                 mediaBox.innerHTML = `
@@ -794,18 +847,15 @@
             }
         }
 
-        // Smart Geo-IP Erkennung
         async function detectUserLocation() {
             try {
                 const response = await fetch('http://ip-api.com/json/');
                 const data = await response.json();
                 
-                // Wenn der User NICHT aus DE, AT, CH kommt, schlagen wir Englisch vor
                 const germanicCountries = ['DE', 'AT', 'CH'];
                 if (data && data.countryCode && !germanicCountries.includes(data.countryCode)) {
                     geoVorgeschlageneSprache = 'en';
                     
-                    // Zeige das Popup an, wenn die aktuelle Sprache noch Deutsch ist
                     if (aktuelleSprache === 'de') {
                         document.getElementById('geoPopupText').innerText = translations['en'].geoSuggest;
                         document.getElementById('geoPopupActionBtn').innerText = "Yes";
@@ -813,7 +863,7 @@
                     }
                 }
             } catch (e) {
-                console.log("Geo-IP API konnte nicht geladen werden (evtl. Adblocker).");
+                console.log("Geo-IP API konnte nicht geladen werden.");
             }
         }
 
@@ -843,15 +893,29 @@
         }
 
         function testLogin() {
+            localStorage.setItem('trinoo_tester_logged', 'true');
+            activateTestLoginState();
+            renderPageBasedOnUrl(); // Aktualisiere Ansicht, um ggf. Edit-Buttons freizuschalten
+        }
+
+        function activateTestLoginState() {
+            isLoggedIn = true;
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('userStatus').style.display = 'block';
             document.getElementById('formArea').classList.add('unlocked');
         }
 
         function logout() {
+            localStorage.removeItem('trinoo_tester_logged');
+            isLoggedIn = false;
+            istImEditModus = false;
             document.getElementById('loginSection').style.display = 'block';
             document.getElementById('userStatus').style.display = 'none';
             document.getElementById('formArea').classList.remove('unlocked');
+            document.getElementById('profileEditBtn').style.display = 'none';
+            document.getElementById('saveEditBtn').style.display = 'none';
+            document.getElementById('shareBtn').style.display = 'block';
+            renderPageBasedOnUrl();
         }
 
         async function setupsAbrufen() {
@@ -906,6 +970,28 @@
                 return;
             }
 
+            // Zwischenspeichern des aktuellen Datensatzes für die Edit-Logik
+            aktuellesGeladenesSetup = data;
+
+            // Da wir im Test-Modus sind, darf der eingeloggte Tester JEDES Profil bearbeiten.
+            // Später prüfen wir hier: if(isLoggedIn && data.user_id === currentUser.id)
+            if (isLoggedIn) {
+                document.getElementById('profileEditBtn').style.display = 'block';
+            } else {
+                document.getElementById('profileEditBtn').style.display = 'none';
+            }
+
+            renderProfileViewData();
+        }
+
+        // Rendert die reinen Textdaten (Clean View)
+        function renderProfileViewData() {
+            istImEditModus = false;
+            document.getElementById('profileEditBtn').innerText = translations[aktuelleSprache].editBtnTxt;
+            document.getElementById('saveEditBtn').style.display = 'none';
+            document.getElementById('shareBtn').style.display = 'block';
+
+            const data = aktuellesGeladenesSetup;
             const eintragDatum = new Date(data.created_at).toLocaleString(aktuelleSprache === 'de' ? 'de-DE' : 'en-US', { 
                 day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
             });
@@ -913,43 +999,94 @@
             document.getElementById('profilTitle').innerText = `${translations[aktuelleSprache].setupCardTitle} #${data.id}`;
             document.getElementById('profilMeta').innerText = `${translations[aktuelleSprache].registeredOn} ${eintragDatum}`;
             
-            // Alle Keys aus der Datenbank mappen
-            const fieldsMap = [
-                { key: 'cpu', value: data.cpu, bold: true },
-                { key: 'gpu', value: data.gpu, bold: true },
-                { key: 'ram', value: data.ram, bold: true },
-                { key: 'mainboard', value: data.mainboard },
-                { key: 'kuehler', value: data.kuehler },
-                { key: 'festplatte', value: data.festplatte },
-                { key: 'gehaeuse', value: data.gehaeuse },
-                { key: 'case_fan', value: data.case_fan },
-                { key: 'netzteil', value: data.netzteil },
-                { key: 'cablemod', value: data.cablemod },
-                { key: 'monitor', value: data.monitor },
-                { key: 'keyboard', value: data.keyboard },
-                { key: 'mouse', value: data.mouse },
-                { key: 'headset', value: data.headset },
-                { key: 'sound', value: data.sound },
-                { key: 'webcam', value: data.webcam },
-                { key: 'chair', value: data.chair },
-                { key: 'desk', value: data.desk },
-                { key: 'accessories', value: data.accessories }
-            ];
-
             let hardwareHtml = '';
-            fieldsMap.forEach(field => {
-                if (field.value && field.value.trim() !== '' && field.value !== '--') {
-                    const textStyle = field.bold ? 'font-weight: bold; color: #fff;' : 'color: #ccc;';
+            fieldsMapConfig.forEach(field => {
+                const val = data[field.key];
+                // Blende leere oder nicht definierte Felder im Profil komplett aus (wie builds.gg)
+                if (val && val.trim() !== '' && val !== '--') {
+                    const isCoreField = (field.key === 'cpu' || field.key === 'gpu' || field.key === 'ram');
+                    const textStyle = isCoreField ? 'font-weight: bold; color: #fff;' : 'color: #ccc;';
                     hardwareHtml += `
-                        <div class="component-line">
+                        <div class="component-line" id="view_line_${field.key}">
                             <span class="component-label">${hardwareLabels[field.key][aktuelleSprache]}</span>
-                            <span style="${textStyle}">${field.value}</span>
+                            <span style="${textStyle}">${val}</span>
                         </div>
                     `;
                 }
             });
 
             document.getElementById('hardwareSpecBox').innerHTML = hardwareHtml;
+        }
+
+        // Schaltet zwischen reiner Ansicht und interaktiven Input-Feldern um (Edit Mode)
+        function toggleEditMode() {
+            if(istImEditModus) {
+                // Abbrechen geklickt -> zurück zur normalen Ansicht
+                renderProfileViewData();
+            } else {
+                // Bearbeiten geklickt -> Verwandle Text-Zeilen in bearbeitbare Inputs
+                istImEditModus = true;
+                document.getElementById('profileEditBtn').innerText = translations[aktuelleSprache].cancelBtnTxt;
+                document.getElementById('saveEditBtn').style.display = 'block';
+                document.getElementById('shareBtn').style.display = 'none';
+
+                let editHardwareHtml = '';
+                fieldsMapConfig.forEach(field => {
+                    // Im Edit-Modus zeigen wir ALLE Felder an, damit man gelöschte hinzufügen kann
+                    const currentVal = aktuellesGeladenesSetup[field.key] || '';
+                    const placeholderTxt = field.required ? 'required' : 'optional...';
+                    
+                    editHardwareHtml += `
+                        <div class="component-line" style="margin-bottom: 12px; border-bottom: 1px dashed #333; padding-bottom: 8px;">
+                            <label class="component-label" for="edit_input_${field.key}" style="display:block; margin-bottom: 4px;">
+                                ${hardwareLabels[field.key][aktuelleSprache]} ${field.required ? '*' : ''}
+                            </label>
+                            <input type="text" class="edit-input-field" id="edit_input_${field.key}" value="${currentVal}" placeholder="${placeholderTxt}" ${field.required ? 'required' : ''}>
+                        </div>
+                    `;
+                });
+
+                document.getElementById('hardwareSpecBox').innerHTML = editHardwareHtml;
+            }
+        }
+
+        // Sendet die geänderten Daten via UPDATE an Supabase
+        async function saveSetupChanges() {
+            if(!aktuellesGeladenesSetup) return;
+
+            // Validierung der Pflichtfelder im Editier-Modus
+            const updatedCpu = document.getElementById('edit_input_cpu').value;
+            const updatedGpu = document.getElementById('edit_input_gpu').value;
+            const updatedRam = document.getElementById('edit_input_ram').value;
+
+            if(!updatedCpu || !updatedGpu || !updatedRam) {
+                alert("CPU, GPU and RAM are required!");
+                return;
+            }
+
+            // Datenobjekt dynamisch zusammenbauen
+            const updateData = {};
+            fieldsMapConfig.forEach(field => {
+                const inputEl = document.getElementById(`edit_input_${field.key}`);
+                if(inputEl) {
+                    updateData[field.key] = inputEl.value;
+                }
+            });
+
+            // Update in Supabase ausführen
+            const { error } = await dbClient
+                .from('setups')
+                .update(updateData)
+                .eq('id', aktuellesGeladenesSetup.id);
+
+            if (error) {
+                alert("Update Error: " + error.message);
+            } else {
+                alert(translations[aktuelleSprache].updateSuccess);
+                // Lokalen State aktualisieren und Ansicht zurücksetzen
+                aktuellesGeladenesSetup = { ...aktuellesGeladenesSetup, ...updateData };
+                renderProfileViewData();
+            }
         }
 
         function zurueckZurStartseite() {
@@ -974,8 +1111,8 @@
             const saubererCode = "<!DOCTYPE html>\n" + ganzerCode;
             navigator.clipboard.writeText(saubererCode).then(() => {
                 const btn = document.getElementById('adminCopyBtn');
-                btn.innerText = "Code kopiert! Bereit für ChatGPT ✓";
-                setTimeout(() => { btn.innerText = "➔ Ganzen Quellcode für ChatGPT kopieren 🛠️"; }, 2000);
+                btn.innerText = "Code kopiert! Bereit für Gemini ✓";
+                setTimeout(() => { btn.innerText = "➔ Ganzen Quellcode für Gemini kopieren 🛠️"; }, 2000);
             });
         }
 
@@ -1002,13 +1139,19 @@
                 accessories: document.getElementById('accessories').value
             };
 
-            const { error } = await dbClient.from('setups').insert([sendData]);
+            const { data, error } = await dbClient.from('setups').insert([sendData]).select();
 
             if (error) {
                 alert("Database Error: " + error.message);
             } else {
                 alert(translations[aktuelleSprache].alertSuccess);
-                window.location.reload();
+                
+                // Komfort-Feature: Leite den User nach dem Abschicken direkt auf sein neues Profil um
+                if(data && data[0] && data[0].id) {
+                    window.location.search = `?id=${data[0].id}`;
+                } else {
+                    window.location.reload();
+                }
             }
         }
     </script>
