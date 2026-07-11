@@ -3,46 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trinoo Setups - Login</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <title>Twitch.tv/Trinoo's Setup</title>
     <style>
-        body { font-family: sans-serif; background-color: #0b0e14; color: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .login-container { background-color: #151a22; padding: 40px; border-radius: 12px; text-align: center; border: 1px solid #2c364c; }
-        .btn-twitch { cursor: pointer; padding: 12px 24px; background-color: #9146ff; color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 16px; }
+        :root { --bg: #0b0e14; --card: #151a22; --accent: #9146ff; --text: #ffffff; }
+        body { font-family: sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: auto; }
+        h1, h2 { color: var(--accent); }
+        .hardware-grid { display: grid; gap: 15px; margin-top: 20px; }
+        .card { background: var(--card); padding: 15px; border-radius: 8px; border: 1px solid #2c364c; }
+        a { color: var(--accent); text-decoration: none; font-weight: bold; }
+        .twitch-link { display: inline-block; padding: 10px 20px; background: var(--accent); color: white; border-radius: 5px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
-    <div class="login-container" id="app">
-        <h1>Anmelden</h1>
-        <button onclick="performLogin()" class="btn-twitch">
-            Mit Twitch anmelden
-        </button>
+    <div class="container">
+        <h1>Twitch.tv/Trinoo's Setup</h1>
+        <p>Hardware-Nerd & Gaming-Urgestein aus Flensburg.</p>
+        <a href="https://twitch.tv/trinoo" class="twitch-link">Besuche mich auf Twitch</a>
+
+        <h2>Mein Gaming Setup</h2>
+        <div class="hardware-grid">
+            <!-- Hier deine Hardware-Einträge -->
+            <div class="card">
+                <strong>Grafikkarte:</strong> NVIDIA RTX 4090 - <a href="#">Link zum Produkt</a>
+            </div>
+            <div class="card">
+                <strong>Prozessor:</strong> AMD Ryzen 9 7950X3D - <a href="#">Link zum Produkt</a>
+            </div>
+            <div class="card">
+                <strong>Maus:</strong> Logitech G Pro X Superlight - <a href="#">Link zum Produkt</a>
+            </div>
+            <!-- Du kannst diese <div class="card">...</div> Blöcke einfach kopieren und anpassen -->
+        </div>
     </div>
 
-    <script>
-        // Wir nutzen einen anderen Namen für die Konstante, um Kollisionen zu vermeiden
-        const sbClient = supabase.createClient(
-            "https://dvttzclfrfufhjqdyswu.supabase.co", 
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR2dHR6Y2xmcmZ1ZmhqcWR5c3d1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEzNzMxNjIsImV4cCI6MjA2Njk0OTE2Mn0.zC6iW72r4i3yvO03A0C8-555"
-        );
-
-        // Prüfung, ob wir gerade vom Login zurückkommen
-        sbClient.auth.onAuthStateChange((event, session) => {
-            if (session) {
-                document.getElementById('app').innerHTML = "<h1>Erfolgreich angemeldet!</h1><p>Willkommen, " + session.user.user_metadata.name + "</p>";
-            }
-        });
-
-        async function performLogin() {
-            const { error } = await sbClient.auth.signInWithOAuth({
-                provider: 'twitch',
-                options: { redirectTo: "https://mein-pc-setup.vercel.app" }
-            });
-            if (error) {
-                alert("Login fehlgeschlagen: " + error.message);
-            }
-        }
-    </script>
 </body>
 </html>
