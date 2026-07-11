@@ -10,31 +10,20 @@
         .container { max-width: 900px; margin: auto; }
         h1 { color: var(--accent); margin-bottom: 20px; }
         
-        /* Das ist der Container, der den Player hält */
-        .stream-container { 
-            position: relative; width: 100%; aspect-ratio: 16 / 9; 
-            border: 2px solid var(--accent); border-radius: 4px; 
-            overflow: hidden; background: #000; margin-bottom: 10px;
-        }
-
-        /* Das Badge sitzt nun fest im Container-Bereich oben rechts */
-        #status-badge { 
-            position: absolute; top: 10px; right: 10px; z-index: 20; 
-            background: rgba(0, 0, 0, 0.8); color: white; padding: 6px 12px; 
-            border-radius: 4px; font-size: 0.85em; font-weight: bold; 
-            display: flex; align-items: center; gap: 8px; border: 1px solid #333;
-        }
+        .stream-container { position: relative; width: 100%; aspect-ratio: 16 / 9; border: 2px solid var(--accent); border-radius: 4px; overflow: hidden; background: #000; margin-bottom: 10px; }
+        #status-badge { position: absolute; top: 10px; right: 10px; z-index: 20; background: rgba(0, 0, 0, 0.8); color: white; padding: 6px 12px; border-radius: 4px; font-size: 0.85em; font-weight: bold; display: flex; align-items: center; gap: 8px; border: 1px solid #333; }
         .dot { width: 10px; height: 10px; border-radius: 50%; }
         .online { background: #00ff00; animation: blink 1.5s infinite; }
         .offline { background: #ff0000; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-
         .stream-container iframe { width: 100%; height: 100%; display: block; border: none; }
         
         .stream-link { display: block; width: 100%; padding: 15px; margin-bottom: 40px; background: var(--accent); color: white; text-align: center; font-weight: bold; text-decoration: none; border-radius: 4px; }
         h2 { color: var(--accent); text-align: center; margin-top: 40px; margin-bottom: 25px; }
-        .hardware-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .card { background: var(--card); padding: 15px; border-radius: 6px; border: 1px solid #2c364c; }
+        
+        .hardware-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .column { display: flex; flex-direction: column; gap: 10px; }
+        .card { background: var(--card); padding: 12px; border-radius: 6px; border: 1px solid #2c364c; font-size: 0.9em; }
         a { color: var(--accent); text-decoration: none; font-weight: bold; }
         .disclaimer { margin-top: 25px; font-size: 0.85em; color: #888; text-align: center; font-style: italic; }
     </style>
@@ -44,7 +33,6 @@
         <h1>Twitch.tv/Trinoo's Setup</h1>
         
         <div class="stream-container">
-            <!-- Badge sitzt nun hier oben rechts im schwarzen Container -->
             <div id="status-badge"><span id="dot" class="dot offline"></span><span id="text">OFFLINE</span></div>
             <iframe src="https://player.twitch.tv/?channel=trinoo&parent=mein-pc-setup.vercel.app" allowfullscreen></iframe>
         </div>
@@ -52,28 +40,31 @@
         <a href="https://www.twitch.tv/trinoo" class="stream-link" target="_blank" rel="noopener noreferrer">Zum Stream</a>
 
         <h2>Mein Gaming Setup</h2>
-        <!-- Hardware Liste -->
         <div class="hardware-grid">
-            <div class="card"><strong>CPU:</strong> <a href="https://amzn.to/4o0S9kM" target="_blank" rel="noopener noreferrer">AMD Ryzen 7 9800X3D</a></div>
-            <div class="card"><strong>CPU Kühler:</strong> <a href="https://amzn.to/42GQicb" target="_blank" rel="noopener noreferrer">Arctic Liquid Freezer III 420 A-RGB</a></div>
-            <div class="card"><strong>GPU:</strong> <a href="https://amzn.to/47qTQSu" target="_blank" rel="noopener noreferrer">MSI GeForce RTX 5080 16G Suprim SOC</a></div>
-            <div class="card"><strong>Mainboard:</strong> <a href="https://amzn.to/42HENBe" target="_blank" rel="noopener noreferrer">MSI MAG X670E Tomahawk WIFI</a></div>
-            <div class="card"><strong>RAM:</strong> <a href="https://amzn.to/4nROl4X" target="_blank" rel="noopener noreferrer">Adata XPG Lancer - 6400 MHz - 64 GB</a></div>
-            <div class="card"><strong>Main Monitor:</strong> <a href="https://amazon.de/dp/B09CD32DNH?tag=twitchtrino0a-21" target="_blank" rel="noopener noreferrer">Asus ROG Strix OLED XG27AQDMGR</a></div>
-            <div class="card"><strong>Side Monitore:</strong> <a href="https://amzn.to/42HEOoM" target="_blank" rel="noopener noreferrer">3x 27" Iiyama Red Eagle G2770QSU</a></div>
-            <div class="card"><strong>Monitorhalterung:</strong> <a href="https://amzn.to/3JfqJs3" target="_blank" rel="noopener noreferrer">Huanuo TS3</a></div>
-            <div class="card"><strong>Soundkarte:</strong> <a href="https://amzn.to/47nmjbP" target="_blank" rel="noopener noreferrer">Creative Sound BlasterX AE-5 Plus</a></div>
-            <div class="card"><strong>Kopfhörer:</strong> <a href="https://amzn.to/4qhYda6" target="_blank" rel="noopener noreferrer">Beyerdynamic DT 990 Pro - 250 Ω</a></div>
-            <div class="card"><strong>Mikrofon:</strong> <a href="https://amzn.to/4vNLmyy" target="_blank" rel="noopener noreferrer">Røde NT-USB+</a></div>
-            <div class="card"><strong>Mikrofonarm:</strong> <a href="https://amzn.to/47s7WTy" target="_blank" rel="noopener noreferrer">InnoGear Boom Arm</a></div>
-            <div class="card"><strong>Maus:</strong> <a href="https://amzn.to/3Pgiij1" target="_blank" rel="noopener noreferrer">Razer Naga V2 Pro</a></div>
-            <div class="card"><strong>Mauspad:</strong> <a href="https://amzn.to/4vlpB8g" target="_blank" rel="noopener noreferrer">CSL - Titanwolf 1200x600mm</a></div>
-            <div class="card"><strong>Tastatur:</strong> <a href="https://amzn.to/4yiOAfl" target="_blank" rel="noopener noreferrer">be quiet! Light Mount</a></div>
-            <div class="card"><strong>Gamepad:</strong> <a href="https://amzn.to/3QXZSol" target="_blank" rel="noopener noreferrer">GameSir Cyclone 2</a></div>
-            <div class="card"><strong>Netzteil:</strong> <a href="https://amzn.to/3KT9PzR" target="_blank" rel="noopener noreferrer">SeaSonic Vertex GX-1200 80+ Gold</a></div>
-            <div class="card"><strong>Tower:</strong> <a href="https://amzn.to/4n3a34P" target="_blank" rel="noopener noreferrer">Be Quiet! Light Base 900 DX</a></div>
-            <div class="card"><strong>Webcam:</strong> <a href="https://amzn.to/4swkEZv" target="_blank" rel="noopener noreferrer">Elgato Facecam 4K</a></div>
-            <div class="card"><strong>Gaming-Stuhl:</strong> <a href="https://amzn.to/3JeVfSO" target="_blank" rel="noopener noreferrer">AKRacing Master Max</a></div>
+            <div class="column">
+                <div class="card"><strong>CPU:</strong> <a href="https://amzn.to/4o0S9kM" target="_blank" rel="noopener noreferrer">AMD Ryzen 7 9800X3D</a></div>
+                <div class="card"><strong>CPU Kühler:</strong> <a href="https://amzn.to/42GQicb" target="_blank" rel="noopener noreferrer">Arctic Liquid Freezer III 420 A-RGB</a></div>
+                <div class="card"><strong>GPU:</strong> <a href="https://amzn.to/47qTQSu" target="_blank" rel="noopener noreferrer">MSI GeForce RTX 5080 16G Suprim SOC</a></div>
+                <div class="card"><strong>Mainboard:</strong> <a href="https://amzn.to/42HENBe" target="_blank" rel="noopener noreferrer">MSI MAG X670E Tomahawk WIFI</a></div>
+                <div class="card"><strong>RAM:</strong> <a href="https://amzn.to/4nROl4X" target="_blank" rel="noopener noreferrer">Adata XPG Lancer - 6400 MHz - 64 GB</a></div>
+                <div class="card"><strong>Side Monitore:</strong> <a href="https://amzn.to/42HEOoM" target="_blank" rel="noopener noreferrer">3x 27" Iiyama Red Eagle G2770QSU</a></div>
+                <div class="card"><strong>Main Monitor:</strong> <a href="https://amazon.de/dp/B09CD32DNH?tag=twitchtrino0a-21" target="_blank" rel="noopener noreferrer">Asus ROG Strix OLED XG27AQDMGR</a></div>
+                <div class="card"><strong>Maus:</strong> <a href="https://amzn.to/3Pgiij1" target="_blank" rel="noopener noreferrer">Razer Naga V2 Pro</a></div>
+                <div class="card"><strong>Mauspad:</strong> <a href="https://amzn.to/4vlpB8g" target="_blank" rel="noopener noreferrer">CSL - Titanwolf 1200x600mm</a></div>
+                <div class="card"><strong>Tastatur:</strong> <a href="https://amzn.to/4yiOAfl" target="_blank" rel="noopener noreferrer">be quiet! Light Mount</a></div>
+            </div>
+            <div class="column">
+                <div class="card"><strong>Kopfhörer:</strong> <a href="https://amzn.to/4qhYda6" target="_blank" rel="noopener noreferrer">Beyerdynamic DT 990 Pro - 250 Ω</a></div>
+                <div class="card"><strong>Soundkarte:</strong> <a href="https://amzn.to/47nmjbP" target="_blank" rel="noopener noreferrer">Creative Sound BlasterX AE-5 Plus</a></div>
+                <div class="card"><strong>Mikrofon:</strong> <a href="https://amzn.to/4vNLmyy" target="_blank" rel="noopener noreferrer">Røde NT-USB+</a></div>
+                <div class="card"><strong>Mikrofonarm:</strong> <a href="https://amzn.to/47s7WTy" target="_blank" rel="noopener noreferrer">InnoGear Boom Arm</a></div>
+                <div class="card"><strong>Gamepad:</strong> <a href="https://amzn.to/3QXZSol" target="_blank" rel="noopener noreferrer">GameSir Cyclone 2</a></div>
+                <div class="card"><strong>Netzteil:</strong> <a href="https://amzn.to/3KT9PzR" target="_blank" rel="noopener noreferrer">SeaSonic Vertex GX-1200 80+ Gold</a></div>
+                <div class="card"><strong>Tower:</strong> <a href="https://amzn.to/4n3a34P" target="_blank" rel="noopener noreferrer">Be Quiet! Light Base 900 DX</a></div>
+                <div class="card"><strong>Webcam:</strong> <a href="https://amzn.to/4swkEZv" target="_blank" rel="noopener noreferrer">Elgato Facecam 4K</a></div>
+                <div class="card"><strong>Monitorhalterung:</strong> <a href="https://amzn.to/3JfqJs3" target="_blank" rel="noopener noreferrer">Huanuo TS3</a></div>
+                <div class="card"><strong>Gaming-Stuhl:</strong> <a href="https://amzn.to/3JeVfSO" target="_blank" rel="noopener noreferrer">AKRacing Master Max</a></div>
+            </div>
         </div>
         <p class="disclaimer">Hinweis: Bei den oben genannten Links handelt es sich um Affiliate-Links.</p>
     </div>
@@ -85,7 +76,6 @@
                 const uptime = await response.text();
                 const viewerResponse = await fetch('https://decapi.me/twitch/viewercount/trinoo');
                 const viewers = await viewerResponse.text();
-
                 if (uptime !== 'trinoo is offline') {
                     document.getElementById('text').innerText = viewers + ' Zuschauer';
                     document.getElementById('dot').className = 'dot online';
