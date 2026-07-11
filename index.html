@@ -157,6 +157,26 @@
             border-color: #00ff88;
         }
 
+        /* Ausklappbarer Hardware-Bereich */
+        .optional-toggle {
+            color: #00ff88;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            display: inline-block;
+            text-decoration: underline;
+        }
+        .optional-fields {
+            display: none;
+            border-top: 1px dashed #333;
+            padding-top: 20px;
+            margin-top: 10px;
+        }
+        .optional-fields.show {
+            display: block;
+        }
+
         /* Submit Button */
         .submit-btn {
             width: 100%;
@@ -227,7 +247,7 @@
             color: #aaa;
             font-weight: bold;
             display: inline-block;
-            width: 50px;
+            width: 90px;
         }
 
         /* Profil Ansicht Styling */
@@ -252,6 +272,29 @@
             transition: background 0.2s;
         }
         .back-btn:hover { background: #444; }
+        
+        /* DYNAMISCHER SHARE BUTTON */
+        .share-btn {
+            display: block;
+            width: 100%;
+            background: #00ff88;
+            color: #111;
+            border: none;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .share-btn.copied {
+            background: #252525;
+            color: #00ff88;
+            border: 1px solid #00ff88;
+        }
+
         .profil-spec-box {
             background: #252525;
             padding: 20px;
@@ -260,11 +303,16 @@
             margin-bottom: 25px;
         }
         .profil-spec-box .component-line {
-            font-size: 1.2rem;
-            margin: 15px 0;
+            font-size: 1.1rem;
+            margin: 12px 0;
+            border-bottom: 1px solid #333;
+            padding-bottom: 6px;
+        }
+        .profil-spec-box .component-line:last-child {
+            border-bottom: none;
         }
         .profil-spec-box .component-label {
-            width: 70px;
+            width: 120px;
             color: #00ff88;
         }
     </style>
@@ -312,28 +360,61 @@
                     <label for="ram">Arbeitsspeicher (RAM)</label>
                     <input type="text" id="ram" placeholder="z.B. 32GB DDR5" required>
                 </div>
+
+                <!-- ERWEITERTE ANGABEN (ZUKLAPPBAR) -->
+                <span class="optional-toggle" onclick="toggleOptionalFields()">+ Mehr Hardware-Details hinzufügen (optional)</span>
+                
+                <div class="optional-fields" id="optionalFields">
+                    <div class="form-group">
+                        <label for="mainboard">Mainboard</label>
+                        <input type="text" id="mainboard" placeholder="z.B. ASUS ROG Strix B650E-E">
+                    </div>
+                    <div class="form-group">
+                        <label for="kuehler">Kühler (AIO / Luft)</label>
+                        <input type="text" id="kuehler" placeholder="z.B. Corsair iCUE Link H150i">
+                    </div>
+                    <div class="form-group">
+                        <label for="festplatte">Festplatte (SSD / HDD)</label>
+                        <input type="text" id="festplatte" placeholder="z.B. 2TB Samsung 990 Pro M.2">
+                    </div>
+                    <div class="form-group">
+                        <label for="gehaeuse">Gehäuse</label>
+                        <input type="text" id="gehaeuse" placeholder="z.B. Lian Li O11 Dynamic EVO">
+                    </div>
+                    <div class="form-group">
+                        <label for="netzteil">Netzteil (PSU)</label>
+                        <input type="text" id="netzteil" placeholder="z.B. be quiet! Straight Power 12 1000W">
+                    </div>
+                </div>
                 
                 <button type="submit" class="submit-btn" id="submitBtn">Setup abschicken 🚀</button>
             </form>
         </div>
     </div>
 
-    <!-- EINZELPROFIL ANSICHT (Standardmäßig versteckt) -->
+    <!-- EINZELPROFIL ANSICHT -->
     <div class="setup-container profil-view" id="profilContainer">
         <button class="back-btn" onclick="zurueckZurStartseite()">⬅ Zurück zur Übersicht</button>
         <h2 id="profilTitle">PC Setup von Zuschauer</h2>
-        <p style="color: #888; font-size: 0.9rem;" id="profilMeta">Eingereicht am ...</p>
+        <p style="color: #888; font-size: 0.9rem; margin-bottom: 20px;" id="profilMeta">Eingereicht am ...</p>
         
         <div class="profil-spec-box">
-            <div class="component-line"><span class="component-label">CPU:</span> <span id="profilCpu" style="font-weight: bold;">...</span></div>
-            <div class="component-line"><span class="component-label">GPU:</span> <span id="profilGpu" style="font-weight: bold;">...</span></div>
-            <div class="component-line"><span class="component-label">RAM:</span> <span id="profilRam" style="font-weight: bold;">...</span></div>
+            <div class="component-line"><span class="component-label">Prozessor:</span> <span id="profilCpu" style="font-weight: bold; color: #fff;">...</span></div>
+            <div class="component-line"><span class="component-label">Grafikkarte:</span> <span id="profilGpu" style="font-weight: bold; color: #fff;">...</span></div>
+            <div class="component-line"><span class="component-label">RAM:</span> <span id="profilRam" style="font-weight: bold; color: #fff;">...</span></div>
+            
+            <div class="component-line"><span class="component-label">Mainboard:</span> <span id="profilMainboard" style="color: #ccc;">--</span></div>
+            <div class="component-line"><span class="component-label">Kühler:</span> <span id="profilKuehler" style="color: #ccc;">--</span></div>
+            <div class="component-line"><span class="component-label">Speicher:</span> <span id="profilFestplatte" style="color: #ccc;">--</span></div>
+            <div class="component-line"><span class="component-label">Gehäuse:</span> <span id="profilGehaeuse" style="color: #ccc;">--</span></div>
+            <div class="component-line"><span class="component-label">Netzteil:</span> <span id="profilNetzteil" style="color: #ccc;">--</span></div>
         </div>
         
-        <p style="color: #666; font-size: 0.85rem; text-align: center;">Teile dieses Setup mit dem Link im Browser! 🔗</p>
+        <!-- NEUER TEILEN-BUTTON -->
+        <button class="share-btn" id="shareBtn" onclick="linkKopieren()">Setup-Link kopieren 📋</button>
     </div>
 
-    <!-- EINGEREICHTE SETUPS LISTE (Wird nur auf der Startseite gebraucht) -->
+    <!-- EINGEREICHTE SETUPS LISTE -->
     <div class="list-container" id="communityListContainer">
         <h3>🖥️ Die 3 neuesten Community-Setups</h3>
         <div id="setupsList">
@@ -348,19 +429,48 @@
         
         const dbClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Routing-Check beim Laden der Seite
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
             const setupId = urlParams.get('id');
 
             if (setupId) {
-                // Wenn ein ?id=X in der URL steht -> Profil laden
                 profilAbrufen(setupId);
             } else {
-                // Sonst normale Startseite laden
                 setupsAbrufen();
             }
         };
+
+        // Funktion zum automatischen Kopieren der URL in die Zwischenablage
+        function linkKopieren() {
+            // Holt die saubere URL des aktuellen Fensters (inklusive des ?id=X Parameters)
+            const profilUrl = window.location.href;
+            
+            // Nutzt die moderne Browser-Clipboard-API zum Schreiben in den Zwischenspeicher
+            navigator.clipboard.writeText(profilUrl).then(() => {
+                const btn = document.getElementById('shareBtn');
+                btn.innerText = "Link kopiert! ✓";
+                btn.classList.add('copied');
+                
+                // Nach 2 Sekunden wird der Button wieder normal zurückgesetzt
+                setTimeout(() => {
+                    btn.innerText = "Setup-Link kopieren 📋";
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                alert("Fehler beim Kopieren: " + err);
+            });
+        }
+
+        function toggleOptionalFields() {
+            const fields = document.getElementById('optionalFields');
+            fields.classList.toggle('show');
+            const toggleBtn = document.querySelector('.optional-toggle');
+            if(fields.classList.contains('show')) {
+                toggleBtn.innerText = "- Weniger Details anzeigen";
+            } else {
+                toggleBtn.innerText = "+ Mehr Hardware-Details hinzufügen (optional)";
+            }
+        }
 
         function testLogin() {
             document.getElementById('loginSection').style.display = 'none';
@@ -374,13 +484,12 @@
             document.getElementById('formArea').classList.remove('unlocked');
         }
 
-        // Holt die LETZTEN 3 Setups ab
         async function setupsAbrufen() {
             const { data, error } = await dbClient
                 .from('setups')
-                .select('*')
+                .select('id, created_at, cpu, gpu, ram')
                 .order('id', { ascending: false })
-                .limit(3); // FIX: Genau 3 Setups maximal!
+                .limit(3);
 
             if (error) {
                 document.getElementById('setupsList').innerHTML = `<p style="color: #ff4444;">Fehler beim Laden: ${error.message}</p>`;
@@ -398,7 +507,6 @@
                     day: '2-digit', month: '2-digit', year: 'numeric'
                 });
 
-                // Die Card verlinkt jetzt per URL-Parameter auf sich selbst (?id=...)
                 listHtml += `
                     <a href="?id=${setup.id}" class="setup-card">
                         <div class="setup-card-header">
@@ -415,9 +523,7 @@
             document.getElementById('setupsList').innerHTML = listHtml;
         }
 
-        // Holt GENAU EIN Setup für die Profilseite
         async function profilAbrufen(id) {
-            // Ansichten umschalten
             document.getElementById('mainFormContainer').style.display = 'none';
             document.getElementById('communityListContainer').style.display = 'none';
             document.getElementById('profilContainer').classList.add('active');
@@ -426,11 +532,12 @@
                 .from('setups')
                 .select('*')
                 .eq('id', id)
-                .single(); // Nur einen Datensatz erwarten
+                .single();
 
             if (error || !data) {
                 document.getElementById('profilTitle').innerText = "Setup nicht gefunden!";
                 document.getElementById('profilMeta').innerText = "Dieser Eintrag existiert leider nicht.";
+                document.getElementById('shareBtn').style.display = 'none'; // Button verstecken bei Fehler
                 return;
             }
 
@@ -438,16 +545,21 @@
                 day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
             });
 
-            // Profildaten ins HTML schreiben
             document.getElementById('profilTitle').innerText = `PC Setup #${data.id}`;
             document.getElementById('profilMeta').innerText = `In die Datenbank eingetragen am ${eintragDatum}`;
-            document.getElementById('profilCpu').innerText = data.cpu;
-            document.getElementById('profilGpu').innerText = data.gpu;
-            document.getElementById('profilRam').innerText = data.ram;
+            
+            document.getElementById('profilCpu').innerText = data.cpu || '--';
+            document.getElementById('profilGpu').innerText = data.gpu || '--';
+            document.getElementById('profilRam').innerText = data.ram || '--';
+            
+            document.getElementById('profilMainboard').innerText = data.mainboard || '--';
+            document.getElementById('profilKuehler').innerText = data.kuehler || '--';
+            document.getElementById('profilFestplatte').innerText = data.festplatte || '--';
+            document.getElementById('profilGehaeuse').innerText = data.gehaeuse || '--';
+            document.getElementById('profilNetzteil').innerText = data.netzteil || '--';
         }
 
         function zurueckZurStartseite() {
-            // Entfernt den URL-Parameter und lädt die Startseite sauber neu
             window.location.href = window.location.origin + window.location.pathname;
         }
 
@@ -455,18 +567,40 @@
             const cpu = document.getElementById('prozessor').value;
             const gpu = document.getElementById('grafikkarte').value;
             const ram = document.getElementById('ram').value;
+            
+            const mainboard = document.getElementById('mainboard').value;
+            const kuehler = document.getElementById('kuehler').value;
+            const festplatte = document.getElementById('festplatte').value;
+            const gehaeuse = document.getElementById('gehaeuse').value;
+            const netzteil = document.getElementById('netzteil').value;
 
             const { data, error } = await dbClient.from('setups').insert([
-                { cpu: cpu, gpu: gpu, ram: ram }
+                { 
+                    cpu: cpu, 
+                    gpu: gpu, 
+                    ram: ram,
+                    mainboard: mainboard,
+                    kuehler: kuehler,
+                    festplatte: festplatte,
+                    gehaeuse: gehaeuse,
+                    netzteil: netzteil
+                }
             ]);
 
             if (error) {
                 alert("Fehler beim Speichern: " + error.message);
             } else {
                 alert("Boom! Dein Setup wurde bombensicher gespeichert! 🖥️🔥");
+                
                 document.getElementById('prozessor').value = '';
                 document.getElementById('grafikkarte').value = '';
                 document.getElementById('ram').value = '';
+                document.getElementById('mainboard').value = '';
+                document.getElementById('kuehler').value = '';
+                document.getElementById('festplatte').value = '';
+                document.getElementById('gehaeuse').value = '';
+                document.getElementById('netzteil').value = '';
+                
                 setupsAbrufen();
             }
         }
