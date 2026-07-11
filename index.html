@@ -20,6 +20,68 @@
         h1 { color: #00ff88; margin-bottom: 5px; }
         .subtitle { color: #888; font-size: 1.2rem; margin-top: 0; margin-bottom: 30px; }
         
+        /* Sprachumschalter Header */
+        .lang-switch-container {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            display: flex;
+            gap: 8px;
+        }
+        .lang-btn {
+            background: #222;
+            border: 1px solid #444;
+            color: #aaa;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .lang-btn.active {
+            border-color: #00ff88;
+            color: #00ff88;
+            background: #1a3a2a;
+        }
+
+        /* Automatisches Geo-IP Sprach-Popup */
+        .geo-popup {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a3a2a;
+            border: 1px solid #00ff88;
+            padding: 12px 25px;
+            border-radius: 30px;
+            z-index: 9999;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            align-items: center;
+            gap: 15px;
+            animation: slideDown 0.4s ease forwards;
+        }
+        @keyframes slideDown {
+            from { top: -60px; opacity: 0; }
+            to { top: 20px; opacity: 1; }
+        }
+        .geo-popup button {
+            background: #00ff88;
+            color: #111;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .geo-popup .close-geo {
+            background: none;
+            color: #888;
+            cursor: pointer;
+            border: none;
+            font-size: 1.1rem;
+        }
+
         /* Twitch Stream Button */
         .twitch-btn {
             display: inline-block;
@@ -50,12 +112,44 @@
             text-align: left;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
+        .setup-container.profil-view-layout {
+            max-width: 950px;
+        }
         .setup-container h2 {
             margin-top: 0;
             color: #00ff88;
             border-bottom: 1px solid #333;
             padding-bottom: 10px;
         }
+
+        /* Grid für die Profil-Ansicht */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            margin-top: 20px;
+        }
+        @media (min-width: 768px) {
+            .profile-grid {
+                grid-template-columns: 1.2fr 1fr;
+            }
+        }
+
+        /* Platzhalter für Setup Bilder */
+        .media-box {
+            background: #252525;
+            border: 2px dashed #444;
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            color: #888;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 250px;
+        }
+        .media-box p { margin: 10px 0 0 0; font-size: 0.95rem; }
 
         /* Social Login Buttons */
         .login-section {
@@ -247,7 +341,7 @@
             color: #aaa;
             font-weight: bold;
             display: inline-block;
-            width: 90px;
+            width: 150px;
         }
 
         /* Profil Ansicht Styling */
@@ -300,20 +394,18 @@
             padding: 20px;
             border-radius: 8px;
             border-left: 4px solid #00ff88;
-            margin-bottom: 25px;
         }
         .profil-spec-box .component-line {
             font-size: 1.1rem;
             margin: 12px 0;
             border-bottom: 1px solid #333;
             padding-bottom: 6px;
-            display: flex; /* Sorgt für sauberes Layout */
+            display: flex;
             align-items: flex-start;
         }
         .profil-spec-box .component-line:last-child {
             border-bottom: none;
         }
-        /* BREITE DER LABEL-SPALTE ERHÖHT FÜR LANGE NAMEN */
         .profil-spec-box .component-label {
             width: 150px; 
             min-width: 150px;
@@ -321,7 +413,7 @@
             display: inline-block;
         }
 
-        /* ADMIN COPY AREA AM ENDE DER SEITE */
+        /* ADMIN COPY AREA */
         .admin-copy-container {
             max-width: 500px;
             margin: 60px auto 20px auto;
@@ -339,184 +431,414 @@
             transition: all 0.2s;
             width: 100%;
         }
-        .admin-copy-btn:hover {
-            background: #2a2a2a;
-            color: #00ff88;
-            border-color: #00ff88;
-        }
     </style>
 </head>
 <body>
 
-    <h1>Twitch.tv/Trinoo</h1>
-    <p class="subtitle">Community-Projekt</p>
+    <!-- Manueller Sprachumschalter oben rechts -->
+    <div class="lang-switch-container">
+        <button class="lang-btn active" id="btnLangDe" onclick="setLanguage('de')">🇩🇪 DE</button>
+        <button class="lang-btn" id="btnLangEn" onclick="setLanguage('en')">🇬🇧 EN</button>
+    </div>
+
+    <!-- Geo-IP Smart Popup (Wird nur getriggert, wenn Sprache nicht matched) -->
+    <div class="geo-popup" id="geoPopup">
+        <span id="geoPopupText">Switch to English?</span>
+        <button id="geoPopupActionBtn" onclick="acceptGeoLanguage()">Yes</button>
+        <button class="close-geo" onclick="closeGeoPopup()">✕</button>
+    </div>
+
+    <h1 data-i18n="mainTitle">Twitch.tv/Trinoo</h1>
+    <p class="subtitle" data-i18n="mainSubtitle">Community-Projekt</p>
     
-    <a href="https://twitch.tv/Trinoo" target="_blank" class="twitch-btn">👾 Besuche den Stream</a>
+    <a href="https://twitch.tv/Trinoo" target="_blank" class="twitch-btn" data-i18n="visitStream">👾 Besuche den Stream</a>
 
     <!-- STANDARD ANSICHT: FORMULAR -->
     <div class="setup-container" id="mainFormContainer">
-        <h2>Setup einreichen</h2>
+        <h2 data-i18n="formTitle">Setup einreichen</h2>
         
         <!-- Login Sektion -->
         <div class="login-section" id="loginSection">
-            <div class="login-title">Zuerst anmelden (Testmodus):</div>
+            <div class="login-title" data-i18n="loginTitle">Zuerst anmelden (Testmodus):</div>
             <div class="social-grid">
-                <button class="social-btn btn-twitch" onclick="testLogin()">👾 Mit Twitch einloggen (Test-Bypass)</button>
+                <button class="social-btn btn-twitch" onclick="testLogin()" data-i18n="loginTwitchBtn">👾 Mit Twitch einloggen (Test-Bypass)</button>
             </div>
         </div>
 
         <!-- Status-Anzeige nach dem Login -->
         <div class="user-status" id="userStatus">
-            🟢 Als Tester eingeloggt: <span id="username" style="color: #00ff88;">Zuschauer</span>
+            <span data-i18n="loggedInAs">🟢 Als Tester eingeloggt:</span> <span id="username" style="color: #00ff88;">Zuschauer</span>
             <br>
-            <button class="logout-btn" onclick="logout()">[ Abmelden ]</button>
+            <button class="logout-btn" onclick="logout()" data-i18n="logoutBtn">[ Abmelden ]</button>
         </div>
         
         <!-- Formular Bereich -->
         <div class="form-area" id="formArea">
             <form onsubmit="setupAbschicken(); return false;">
                 <div class="form-group">
-                    <label for="prozessor">Prozessor (CPU)</label>
-                    <input type="text" id="prozessor" placeholder="z.B. AMD Ryzen 7 7800X3D" required>
+                    <label for="prozessor" data-i18n="labelCpu">Prozessor (CPU)</label>
+                    <input type="text" id="prozessor" placeholder="e.g. AMD Ryzen, Intel Core..." required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="grafikkarte">Grafikkarte (GPU)</label>
-                    <input type="text" id="grafikkarte" placeholder="z.B. NVIDIA RTX 4080 Super" required>
+                    <label for="grafikkarte" data-i18n="labelGpu">Grafikkarte (GPU)</label>
+                    <input type="text" id="grafikkarte" placeholder="e.g. ASUS, MSI, NVIDIA GeForce, AMD Radeon..." required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="ram">Arbeitsspeicher (RAM)</label>
-                    <input type="text" id="ram" placeholder="z.B. 32GB DDR5" required>
+                    <label for="ram" data-i18n="labelRam">Arbeitsspeicher (Memory)</label>
+                    <input type="text" id="ram" placeholder="e.g. Corsair Vengeance, G.Skill, Kingston..." required>
                 </div>
 
                 <!-- ERWEITERTE ANGABEN (ZUKLAPPBAR) -->
-                <span class="optional-toggle" onclick="toggleOptionalFields()">+ Mehr Hardware-Details hinzufügen (optional)</span>
+                <span class="optional-toggle" id="optionalToggleBtn" onclick="toggleOptionalFields()" data-i18n="toggleMore">+ Mehr Hardware & Peripherie hinzufügen (optional)</span>
                 
                 <div class="optional-fields" id="optionalFields">
                     <div class="form-group">
-                        <label for="mainboard">Mainboard</label>
-                        <input type="text" id="mainboard" placeholder="z.B. ASUS ROG Strix B650E-E">
+                        <label for="mainboard" data-i18n="labelMb">Mainboard (Motherboard)</label>
+                        <input type="text" id="mainboard" placeholder="e.g. ASUS ROG, MSI, Gigabyte, ASRock...">
                     </div>
                     <div class="form-group">
-                        <label for="kuehler">Kühler (AIO / Luft)</label>
-                        <input type="text" id="kuehler" placeholder="z.B. Corsair iCUE Link H150i">
+                        <label for="kuehler" data-i18n="labelCooling">Kühler / AIO (Cooling)</label>
+                        <input type="text" id="kuehler" placeholder="e.g. Corsair iCUE, NZXT Kraken, Noctua, be quiet!...">
                     </div>
                     <div class="form-group">
-                        <label for="festplatte">Festplatte (SSD / HDD)</label>
-                        <input type="text" id="festplatte" placeholder="z.B. 2TB Samsung 990 Pro M.2">
+                        <label for="festplatte" data-i18n="labelStorage">Festplatten (Storage)</label>
+                        <input type="text" id="festplatte" placeholder="e.g. Samsung NVMe SSD, WD Black, Crucial...">
                     </div>
                     <div class="form-group">
-                        <label for="gehaeuse">Gehäuse</label>
-                        <input type="text" id="gehaeuse" placeholder="z.B. Lian Li O11 Dynamic EVO">
+                        <label for="gehaeuse" data-i18n="labelCase">Gehäuse (Case)</label>
+                        <input type="text" id="gehaeuse" placeholder="e.g. Lian Li, NZXT, Fractal Design, Corsair...">
                     </div>
                     <div class="form-group">
-                        <label for="netzteil">Netzteil (PSU)</label>
-                        <input type="text" id="netzteil" placeholder="z.B. be quiet! Straight Power 12 1000W">
+                        <label for="case_fan" data-i18n="labelFans">Gehäuselüfter (Case Fan)</label>
+                        <input type="text" id="case_fan" placeholder="e.g. Lian Li UNI FAN, Corsair LL120...">
+                    </div>
+                    <div class="form-group">
+                        <label for="netzteil" data-i18n="labelPsu">Netzteil (PSU)</label>
+                        <input type="text" id="netzteil" placeholder="e.g. be quiet! Dark Power, Seasonic, Corsair...">
+                    </div>
+                    <div class="form-group">
+                        <label for="cablemod" data-i18n="labelCablemod">Custom Kabel (CableMod)</label>
+                        <input type="text" id="cablemod" placeholder="e.g. CableMod Pro Extension Kit...">
+                    </div>
+                    <div class="form-group">
+                        <label for="monitor" data-i18n="labelMonitor">Monitor</label>
+                        <input type="text" id="monitor" placeholder="e.g. LG UltraGear, Samsung Odyssey, ASUS ROG...">
+                    </div>
+                    <div class="form-group">
+                        <label for="keyboard" data-i18n="labelKeyboard">Tastatur (Keyboard)</label>
+                        <input type="text" id="keyboard" placeholder="e.g. Custom Mechanical, Logitech G, Razer...">
+                    </div>
+                    <div class="form-group">
+                        <label for="mouse" data-i18n="labelMouse">Maus (Mouse)</label>
+                        <input type="text" id="mouse" placeholder="e.g. Logitech G Pro X Superlight, Razer Viper...">
+                    </div>
+                    <div class="form-group">
+                        <label for="headset" data-i18n="labelHeadset">Headset / Kopfhörer</label>
+                        <input type="text" id="headset" placeholder="e.g. Beyerdynamic DT 990, Audio-Technica, SteelSeries...">
+                    </div>
+                    <div class="form-group">
+                        <label for="sound" data-i18n="labelSound">Sound / Mikrofon / Soundkarte</label>
+                        <input type="text" id="sound" placeholder="e.g. Shure SM7B, Focusrite Scarlett, Elgato Wave...">
+                    </div>
+                    <div class="form-group">
+                        <label for="webcam" data-i18n="labelWebcam">Webcam / Kamera</label>
+                        <input type="text" id="webcam" placeholder="e.g. Elgato Facecam, Sony Alpha, Logitech...">
+                    </div>
+                    <div class="form-group">
+                        <label for="chair" data-i18n="labelChair">Gaming Stuhl (Chair)</label>
+                        <input type="text" id="chair" placeholder="e.g. Secretlab TITAN, Backforce One, Noblechairs...">
+                    </div>
+                    <div class="form-group">
+                        <label for="desk" data-i18n="labelDesk">Schreibtisch (Desk)</label>
+                        <input type="text" id="desk" placeholder="e.g. Höhenverstellbarer Schreibtisch, IKEA Karlby...">
+                    </div>
+                    <div class="form-group">
+                        <label for="accessories" data-i18n="labelAccessories">Zubehör (Accessories)</label>
+                        <input type="text" id="accessories" placeholder="e.g. Stream Deck, Elgato Light Strip...">
                     </div>
                 </div>
                 
-                <button type="submit" class="submit-btn" id="submitBtn">Setup abschicken 🚀</button>
+                <button type="submit" class="submit-btn" id="submitBtn" data-i18n="submitBtnTxt">Setup abschicken 🚀</button>
             </form>
         </div>
     </div>
 
-    <!-- EINZELPROFIL ANSICHT -->
-    <div class="setup-container profil-view" id="profilContainer">
-        <button class="back-btn" onclick="zurueckZurStartseite()">⬅ Zurück zur Übersicht</button>
-        <h2 id="profilTitle">PC Setup von Zuschauer</h2>
-        <p style="color: #888; font-size: 0.9rem; margin-bottom: 20px;" id="profilMeta">Eingereicht am ...</p>
+    <!-- ZWEISPALTIGE EINZELPROFIL ANSICHT -->
+    <div class="setup-container profil-view profil-view-layout" id="profilContainer">
+        <button class="back-btn" onclick="zurueckZurStartseite()" data-i18n="backBtn">⬅ Zurück zur Übersicht</button>
+        <h2 id="profilTitle">PC Setup</h2>
+        <p style="color: #888; font-size: 0.9rem; margin-bottom: 20px;" id="profilMeta">...</p>
         
-        <div class="profil-spec-box">
-            <div class="component-line"><span class="component-label">Prozessor:</span> <span id="profilCpu" style="font-weight: bold; color: #fff;">...</span></div>
-            <div class="component-line"><span class="component-label">Grafikkarte:</span> <span id="profilGpu" style="font-weight: bold; color: #fff;">...</span></div>
-            <div class="component-line"><span class="component-label">RAM:</span> <span id="profilRam" style="font-weight: bold; color: #fff;">...</span></div>
+        <div class="profile-grid">
+            <!-- Linke Spalte: Smarte Hardware-Liste -->
+            <div class="profil-spec-box" id="hardwareSpecBox"></div>
             
-            <div class="component-line"><span class="component-label">Mainboard:</span> <span id="profilMainboard" style="color: #ccc;">--</span></div>
-            <div class="component-line"><span class="component-label">Kühler:</span> <span id="profilKuehler" style="color: #ccc;">--</span></div>
-            <div class="component-line"><span class="component-label">Speicher:</span> <span id="profilFestplatte" style="color: #ccc;">--</span></div>
-            <div class="component-line"><span class="component-label">Gehäuse:</span> <span id="profilGehaeuse" style="color: #ccc;">--</span></div>
-            <div class="component-line"><span class="component-label">Netzteil:</span> <span id="profilNetzteil" style="color: #ccc;">--</span></div>
+            <!-- Rechte Spalte: Bilder Platzhalter -->
+            <div>
+                <div class="media-box" id="mediaBoxContainer">
+                    <!-- Wird via JS übersetzt -->
+                </div>
+                <button class="share-btn" id="shareBtn" onclick="linkKopieren()" data-i18n="copyLinkBtn">Setup-Link kopieren 📋</button>
+            </div>
         </div>
-        
-        <button class="share-btn" id="shareBtn" onclick="linkKopieren()">Setup-Link kopieren 📋</button>
     </div>
 
     <!-- EINGEREICHTE SETUPS LISTE -->
     <div class="list-container" id="communityListContainer">
-        <h3>🖥️ Die 3 neuesten Community-Setups</h3>
-        <div id="setupsList">
-            <p style="color: #666; text-align: center;">Lade Setups aus der Datenbank...</p>
-        </div>
+        <h3 id="communityListTitle" data-i18n="latestSetups">🖥️ Die 3 neuesten Community-Setups</h3>
+        <div id="setupsList"></div>
     </div>
 
-    <!-- ADMIN QUELLE-KOPIEREN BUTTON GANZ UNTEN -->
+    <!-- ADMIN AREA -->
     <div class="admin-copy-container">
         <button class="admin-copy-btn" id="adminCopyBtn" onclick="quellcodeKopieren()">➔ Ganzen Quellcode für ChatGPT kopieren 🛠️</button>
     </div>
 
-    <!-- DATENBANK-LOGIK -->
+    <!-- LOGIK & SPRACHUMSCHALTUNG -->
     <script>
         const SUPABASE_URL = "https://dvttzclfrfufhjqdyswu.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_2gQmO2ZUVTIio65mbh7Muw_P4OkyA7K";
-        
         const dbClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        let aktuelleSprache = 'de';
+        let geoVorgeschlageneSprache = '';
+
+        // ÜBERSETZUNGS-DATENBANK (DICTIONARY)
+        const translations = {
+            de: {
+                mainTitle: "Twitch.tv/Trinoo",
+                mainSubtitle: "Community-Projekt",
+                visitStream: "👾 Besuche den Stream",
+                formTitle: "Setup einreichen",
+                loginTitle: "Zuerst anmelden (Testmodus):",
+                loginTwitchBtn: "👾 Mit Twitch einloggen (Test-Bypass)",
+                loggedInAs: "🟢 Als Tester eingeloggt:",
+                logoutBtn: "[ Abmelden ]",
+                labelCpu: "Prozessor (CPU)",
+                labelGpu: "Grafikkarte (GPU)",
+                labelRam: "Arbeitsspeicher (Memory)",
+                toggleMore: "+ Mehr Hardware & Peripherie hinzufügen (optional)",
+                toggleLess: "- Weniger Details anzeigen",
+                labelMb: "Mainboard (Motherboard)",
+                labelCooling: "Kühler / AIO (Cooling)",
+                labelStorage: "Festplatten (Storage)",
+                labelCase: "Gehäuse (Case)",
+                labelFans: "Gehäuselüfter (Case Fan)",
+                labelPsu: "Netzteil (PSU)",
+                labelCablemod: "Custom Kabel (CableMod)",
+                labelMonitor: "Monitor",
+                labelKeyboard: "Tastatur (Keyboard)",
+                labelMouse: "Maus (Mouse)",
+                labelHeadset: "Headset / Kopfhörer",
+                labelSound: "Sound / Mikrofon / Soundkarte",
+                labelWebcam: "Webcam / Kamera",
+                labelChair: "Gaming Stuhl (Chair)",
+                labelDesk: "Schreibtisch (Desk)",
+                labelAccessories: "Zubehör (Accessories)",
+                submitBtnTxt: "Setup abschicken 🚀",
+                backBtn: "⬅ Zurück zur Übersicht",
+                copyLinkBtn: "Setup-Link kopieren 📋",
+                latestSetups: "🖥️ Die 3 neuesten Community-Setups",
+                linkCopied: "Link kopiert! ✓",
+                dbLoading: "Lade Setups aus der Datenbank...",
+                dbEmpty: "Keine Setups vorhanden.",
+                setupCardTitle: "Setup",
+                viewProfile: "Profil anzeigen ➔",
+                registeredOn: "In die Datenbank eingetragen am",
+                mediaTitle: "<strong>Bilder-Galerie kommt bald!</strong>",
+                mediaDesc: "In Kürze können hier Fotos direkt hochgeladen werden.",
+                alertSuccess: "Boom! Dein Setup wurde bombensicher gespeichert! 🖥️🔥",
+                geoSuggest: "Auf Englisch umschalten?"
+            },
+            en: {
+                mainTitle: "Twitch.tv/Trinoo",
+                mainSubtitle: "Community Project",
+                visitStream: "👾 Visit the Stream",
+                formTitle: "Submit Setup",
+                loginTitle: "Login first (Test Mode):",
+                loginTwitchBtn: "👾 Login with Twitch (Test Bypass)",
+                loggedInAs: "🟢 Logged in as Tester:",
+                logoutBtn: "[ Logout ]",
+                labelCpu: "Processor (CPU)",
+                labelGpu: "Graphics Card (GPU)",
+                labelRam: "Memory (RAM)",
+                toggleMore: "+ Add more hardware & peripherals (optional)",
+                toggleLess: "- Show less details",
+                labelMb: "Motherboard",
+                labelCooling: "Cooling / AIO",
+                labelStorage: "Storage (SSD/HDD)",
+                labelCase: "Case",
+                labelFans: "Case Fans",
+                labelPsu: "Power Supply (PSU)",
+                labelCablemod: "Custom Cables (CableMod)",
+                labelMonitor: "Monitor",
+                labelKeyboard: "Keyboard",
+                labelMouse: "Mouse",
+                labelHeadset: "Headset / Headphones",
+                labelSound: "Sound / Mic / Audio Card",
+                labelWebcam: "Webcam / Camera",
+                labelChair: "Gaming Chair",
+                labelDesk: "Desk",
+                labelAccessories: "Accessories",
+                submitBtnTxt: "Submit Setup 🚀",
+                backBtn: "⬅ Back to Overview",
+                copyLinkBtn: "Copy Setup Link 📋",
+                latestSetups: "🖥️ The 3 Latest Community Setups",
+                linkCopied: "Link copied! ✓",
+                dbLoading: "Loading setups from database...",
+                dbEmpty: "No setups found.",
+                setupCardTitle: "Setup",
+                viewProfile: "View Profile ➔",
+                registeredOn: "Registered in database on",
+                mediaTitle: "<strong>Image Gallery Coming Soon!</strong>",
+                mediaDesc: "Soon you will be able to upload photos here directly.",
+                alertSuccess: "Boom! Your setup has been saved securely! 🖥️🔥",
+                geoSuggest: "Switch website to English?"
+            }
+        };
+
+        // Hardware Labels Mapping für Profilansicht
+        const hardwareLabels = {
+            cpu: { de: "Prozessor:", en: "Processor:" },
+            gpu: { de: "Grafikkarte:", en: "Graphics Card:" },
+            ram: { de: "RAM:", en: "RAM:" },
+            mainboard: { de: "Mainboard:", en: "Motherboard:" },
+            kuehler: { de: "Kühler / AIO:", en: "Cooling / AIO:" },
+            festplatte: { de: "Speicher:", en: "Storage:" },
+            gehaeuse: { de: "Gehäuse:", en: "Case:" },
+            case_fan: { de: "Gehäuselüfter:", en: "Case Fans:" },
+            netzteil: { de: "Netzteil:", en: "Power Supply:" },
+            cablemod: { de: "Custom Kabel:", en: "Custom Cables:" },
+            monitor: { de: "Monitor:", en: "Monitor:" },
+            keyboard: { de: "Tastatur:", en: "Keyboard:" },
+            mouse: { de: "Maus:", en: "Mouse:" },
+            headset: { de: "Headset:", en: "Headset:" },
+            sound: { de: "Sound/Audio:", en: "Sound/Audio:" },
+            webcam: { de: "Webcam:", en: "Webcam:" },
+            chair: { de: "Stuhl:", en: "Chair:" },
+            desk: { de: "Schreibtisch:", en: "Desk:" },
+            accessories: { de: "Zubehör:", en: "Accessories:" }
+        };
+
         window.onload = function() {
+            // 1. IP-Ländererkennung starten
+            detectUserLocation();
+
+            // 2. URL Checken & Rendern
+            renderPageBasedOnUrl();
+        };
+
+        function renderPageBasedOnUrl() {
             const urlParams = new URLSearchParams(window.location.search);
             const setupId = urlParams.get('id');
+
+            // Grundlegende UI Übersetzungen laden
+            applyTranslations();
 
             if (setupId) {
                 profilAbrufen(setupId);
             } else {
                 setupsAbrufen();
             }
-        };
-
-        function quellcodeKopieren() {
-            const ganzerCode = document.documentElement.outerHTML;
-            const saubererCode = "<!DOCTYPE html>\n" + ganzerCode;
-            
-            navigator.clipboard.writeText(saubererCode).then(() => {
-                const btn = document.getElementById('adminCopyBtn');
-                btn.innerText = "Code kopiert! Bereit für ChatGPT ✓";
-                btn.style.color = "#00ff88";
-                btn.style.borderColor = "#00ff88";
-                
-                setTimeout(() => {
-                    btn.innerText = "➔ Ganzen Quellcode für ChatGPT kopieren 🛠️";
-                    btn.style.color = "#666";
-                    btn.style.borderColor = "#333";
-                }, 2000);
-            }).catch(err => {
-                alert("Fehler beim Kopieren: " + err);
-            });
         }
 
-        function linkKopieren() {
-            const profilUrl = window.location.href;
-            navigator.clipboard.writeText(profilUrl).then(() => {
-                const btn = document.getElementById('shareBtn');
-                btn.innerText = "Link kopiert! ✓";
-                btn.classList.add('copied');
-                
-                setTimeout(() => {
-                    btn.innerText = "Setup-Link kopieren 📋";
-                    btn.classList.remove('copied');
-                }, 2000);
-            }).catch(err => {
-                alert("Fehler beim Kopieren: " + err);
+        // FUNKTION: Sprache wechseln & UI updaten
+        function setLanguage(lang) {
+            aktuelleSprache = lang;
+            
+            // Buttons Visuell anpassen
+            document.getElementById('btnLangDe').classList.remove('active');
+            document.getElementById('btnLangEn').classList.remove('active');
+            if(lang === 'de') document.getElementById('btnLangDe').classList.add('active');
+            if(lang === 'en') document.getElementById('btnLangEn').classList.add('active');
+
+            // Übersetzungen anwenden
+            applyTranslations();
+
+            // Wenn wir uns im Profil befinden, Hardware-Liste neu zeichnen
+            const urlParams = new URLSearchParams(window.location.search);
+            const setupId = urlParams.get('id');
+            if (setupId) {
+                profilAbrufen(setupId);
+            } else {
+                setupsAbrufen();
+            }
+        }
+
+        function applyTranslations() {
+            const t = translations[aktuelleSprache];
+            
+            // Standard Elemente mit data-i18n Attribut übersetzen
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (t[key]) {
+                    // Falls es der Toggle-Button ist, aufpassen wegen Zustand
+                    if (key === 'toggleMore' && document.getElementById('optionalFields').classList.contains('show')) {
+                        el.innerText = t['toggleLess'];
+                    } else {
+                        el.innerText = t[key];
+                    }
+                }
             });
+
+            // Medienbox statisch auffrischen
+            const mediaBox = document.getElementById('mediaBoxContainer');
+            if (mediaBox) {
+                mediaBox.innerHTML = `
+                    <span style="font-size: 2.5rem;">📸</span>
+                    <p>${t.mediaTitle}</p>
+                    <p style="font-size: 0.8rem; color: #666;">${t.mediaDesc}</p>
+                `;
+            }
+        }
+
+        // Smart Geo-IP Erkennung
+        async function detectUserLocation() {
+            try {
+                const response = await fetch('http://ip-api.com/json/');
+                const data = await response.json();
+                
+                // Wenn der User NICHT aus DE, AT, CH kommt, schlagen wir Englisch vor
+                const germanicCountries = ['DE', 'AT', 'CH'];
+                if (data && data.countryCode && !germanicCountries.includes(data.countryCode)) {
+                    geoVorgeschlageneSprache = 'en';
+                    
+                    // Zeige das Popup an, wenn die aktuelle Sprache noch Deutsch ist
+                    if (aktuelleSprache === 'de') {
+                        document.getElementById('geoPopupText').innerText = translations['en'].geoSuggest;
+                        document.getElementById('geoPopupActionBtn').innerText = "Yes";
+                        document.getElementById('geoPopup').style.display = 'flex';
+                    }
+                }
+            } catch (e) {
+                console.log("Geo-IP API konnte nicht geladen werden (evtl. Adblocker).");
+            }
+        }
+
+        function acceptGeoLanguage() {
+            if (geoVorgeschlageneSprache) {
+                setLanguage(geoVorgeschlageneSprache);
+            }
+            closeGeoPopup();
+        }
+
+        function closeGeoPopup() {
+            document.getElementById('geoPopup').style.animation = "none";
+            document.getElementById('geoPopup').style.display = 'none';
         }
 
         function toggleOptionalFields() {
             const fields = document.getElementById('optionalFields');
             fields.classList.toggle('show');
-            const toggleBtn = document.querySelector('.optional-toggle');
+            const toggleBtn = document.getElementById('optionalToggleBtn');
+            const t = translations[aktuelleSprache];
+            
             if(fields.classList.contains('show')) {
-                toggleBtn.innerText = "- Weniger Details anzeigen";
+                toggleBtn.innerText = t.toggleLess;
             } else {
-                toggleBtn.innerText = "+ Mehr Hardware-Details hinzufügen (optional)";
+                toggleBtn.innerText = t.toggleMore;
             }
         }
 
@@ -533,6 +855,8 @@
         }
 
         async function setupsAbrufen() {
+            document.getElementById('setupsList').innerHTML = `<p style="color: #666; text-align: center;">${translations[aktuelleSprache].dbLoading}</p>`;
+            
             const { data, error } = await dbClient
                 .from('setups')
                 .select('id, created_at, cpu, gpu, ram')
@@ -540,34 +864,33 @@
                 .limit(3);
 
             if (error) {
-                document.getElementById('setupsList').innerHTML = `<p style="color: #ff4444;">Fehler beim Laden: ${error.message}</p>`;
+                document.getElementById('setupsList').innerHTML = `<p style="color: #ff4444;">Error: ${error.message}</p>`;
                 return;
             }
 
             if (!data || data.length === 0) {
-                document.getElementById('setupsList').innerHTML = '<p style="color: #666; text-align: center;">Noch keine Setups eingetragen.</p>';
+                document.getElementById('setupsList').innerHTML = `<p style="color: #666; text-align: center;">${translations[aktuelleSprache].dbEmpty}</p>`;
                 return;
             }
 
             let listHtml = '';
             data.forEach((setup) => {
-                const eintragDatum = new Date(setup.created_at).toLocaleString('de-DE', { 
-                    day: '2-digit', month: '2-digit', year: 'numeric'
+                const eintragDatum = new Date(setup.created_at).toLocaleString(aktuelleSprache === 'de' ? 'de-DE' : 'en-US', { 
+                    day: '2-digit', month: '2-digit', year: 'numeric' 
                 });
-
+                
                 listHtml += `
                     <a href="?id=${setup.id}" class="setup-card">
                         <div class="setup-card-header">
-                            <span>💾 Setup #${setup.id} - ${eintragDatum}</span>
-                            <span class="view-profile-hint">Profil anzeigen ➔</span>
+                            <span>💾 ${translations[aktuelleSprache].setupCardTitle} #${setup.id} - ${eintragDatum}</span>
+                            <span class="view-profile-hint">${translations[aktuelleSprache].viewProfile}</span>
                         </div>
-                        <div class="component-line"><span class="component-label">CPU:</span> ${setup.cpu}</div>
-                        <div class="component-line"><span class="component-label">GPU:</span> ${setup.gpu}</div>
-                        <div class="component-line"><span class="component-label">RAM:</span> ${setup.ram}</div>
+                        <div class="component-line"><span class="component-label">${hardwareLabels.cpu[aktuelleSprache]}</span> ${setup.cpu}</div>
+                        <div class="component-line"><span class="component-label">${hardwareLabels.gpu[aktuelleSprache]}</span> ${setup.gpu}</div>
+                        <div class="component-line"><span class="component-label">${hardwareLabels.ram[aktuelleSprache]}</span> ${setup.ram}</div>
                     </a>
                 `;
             });
-
             document.getElementById('setupsList').innerHTML = listHtml;
         }
 
@@ -576,83 +899,118 @@
             document.getElementById('communityListContainer').style.display = 'none';
             document.getElementById('profilContainer').classList.add('active');
 
-            const { data, error } = await dbClient
-                .from('setups')
-                .select('*')
-                .eq('id', id)
-                .single();
+            const { data, error } = await dbClient.from('setups').select('*').eq('id', id).single();
 
             if (error || !data) {
-                document.getElementById('profilTitle').innerText = "Setup nicht gefunden!";
-                document.getElementById('profilMeta').innerText = "Dieser Eintrag existiert leider nicht.";
-                document.getElementById('shareBtn').style.display = 'none';
+                document.getElementById('profilTitle').innerText = "Setup error!";
                 return;
             }
 
-            const eintragDatum = new Date(data.created_at).toLocaleString('de-DE', { 
+            const eintragDatum = new Date(data.created_at).toLocaleString(aktuelleSprache === 'de' ? 'de-DE' : 'en-US', { 
                 day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
             });
 
-            document.getElementById('profilTitle').innerText = `PC Setup #${data.id}`;
-            document.getElementById('profilMeta').innerText = `In die Datenbank eingetragen am ${eintragDatum}`;
+            document.getElementById('profilTitle').innerText = `${translations[aktuelleSprache].setupCardTitle} #${data.id}`;
+            document.getElementById('profilMeta').innerText = `${translations[aktuelleSprache].registeredOn} ${eintragDatum}`;
             
-            document.getElementById('profilCpu').innerText = data.cpu || '--';
-            document.getElementById('profilGpu').innerText = data.gpu || '--';
-            document.getElementById('profilRam').innerText = data.ram || '--';
-            
-            document.getElementById('profilMainboard').innerText = data.mainboard || '--';
-            document.getElementById('profilKuehler').innerText = data.kuehler || '--';
-            document.getElementById('profilFestplatte').innerText = data.festplatte || '--';
-            document.getElementById('profilGehaeuse').innerText = data.gehaeuse || '--';
-            document.getElementById('profilNetzteil').innerText = data.netzteil || '--';
+            // Alle Keys aus der Datenbank mappen
+            const fieldsMap = [
+                { key: 'cpu', value: data.cpu, bold: true },
+                { key: 'gpu', value: data.gpu, bold: true },
+                { key: 'ram', value: data.ram, bold: true },
+                { key: 'mainboard', value: data.mainboard },
+                { key: 'kuehler', value: data.kuehler },
+                { key: 'festplatte', value: data.festplatte },
+                { key: 'gehaeuse', value: data.gehaeuse },
+                { key: 'case_fan', value: data.case_fan },
+                { key: 'netzteil', value: data.netzteil },
+                { key: 'cablemod', value: data.cablemod },
+                { key: 'monitor', value: data.monitor },
+                { key: 'keyboard', value: data.keyboard },
+                { key: 'mouse', value: data.mouse },
+                { key: 'headset', value: data.headset },
+                { key: 'sound', value: data.sound },
+                { key: 'webcam', value: data.webcam },
+                { key: 'chair', value: data.chair },
+                { key: 'desk', value: data.desk },
+                { key: 'accessories', value: data.accessories }
+            ];
+
+            let hardwareHtml = '';
+            fieldsMap.forEach(field => {
+                if (field.value && field.value.trim() !== '' && field.value !== '--') {
+                    const textStyle = field.bold ? 'font-weight: bold; color: #fff;' : 'color: #ccc;';
+                    hardwareHtml += `
+                        <div class="component-line">
+                            <span class="component-label">${hardwareLabels[field.key][aktuelleSprache]}</span>
+                            <span style="${textStyle}">${field.value}</span>
+                        </div>
+                    `;
+                }
+            });
+
+            document.getElementById('hardwareSpecBox').innerHTML = hardwareHtml;
         }
 
         function zurueckZurStartseite() {
             window.location.href = window.location.origin + window.location.pathname;
         }
 
-        async function setupAbschicken() {
-            const cpu = document.getElementById('prozessor').value;
-            const gpu = document.getElementById('grafikkarte').value;
-            const ram = document.getElementById('ram').value;
-            
-            const mainboard = document.getElementById('mainboard').value;
-            const kuehler = document.getElementById('kuehler').value;
-            const festplatte = document.getElementById('festplatte').value;
-            const gehaeuse = document.getElementById('gehaeuse').value;
-            const netzteil = document.getElementById('netzteil').value;
+        function linkKopieren() {
+            const profilUrl = window.location.href;
+            navigator.clipboard.writeText(profilUrl).then(() => {
+                const btn = document.getElementById('shareBtn');
+                btn.innerText = translations[aktuelleSprache].linkCopied;
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.innerText = translations[aktuelleSprache].copyLinkBtn;
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
 
-            const { data, error } = await dbClient.from('setups').insert([
-                { 
-                    cpu: cpu, 
-                    gpu: gpu, 
-                    ram: ram,
-                    mainboard: mainboard,
-                    kuehler: kuehler,
-                    festplatte: festplatte,
-                    gehaeuse: gehaeuse,
-                    netzteil: netzteil
-                }
-            ]);
+        function quellcodeKopieren() {
+            const ganzerCode = document.documentElement.outerHTML;
+            const saubererCode = "<!DOCTYPE html>\n" + ganzerCode;
+            navigator.clipboard.writeText(saubererCode).then(() => {
+                const btn = document.getElementById('adminCopyBtn');
+                btn.innerText = "Code kopiert! Bereit für ChatGPT ✓";
+                setTimeout(() => { btn.innerText = "➔ Ganzen Quellcode für ChatGPT kopieren 🛠️"; }, 2000);
+            });
+        }
+
+        async function setupAbschicken() {
+            const sendData = {
+                cpu: document.getElementById('prozessor').value,
+                gpu: document.getElementById('grafikkarte').value,
+                ram: document.getElementById('ram').value,
+                mainboard: document.getElementById('mainboard').value,
+                kuehler: document.getElementById('kuehler').value,
+                festplatte: document.getElementById('festplatte').value,
+                gehaeuse: document.getElementById('gehaeuse').value,
+                case_fan: document.getElementById('case_fan').value,
+                netzteil: document.getElementById('netzteil').value,
+                cablemod: document.getElementById('cablemod').value,
+                monitor: document.getElementById('monitor').value,
+                keyboard: document.getElementById('keyboard').value,
+                mouse: document.getElementById('mouse').value,
+                headset: document.getElementById('headset').value,
+                sound: document.getElementById('sound').value,
+                webcam: document.getElementById('webcam').value,
+                chair: document.getElementById('chair').value,
+                desk: document.getElementById('desk').value,
+                accessories: document.getElementById('accessories').value
+            };
+
+            const { error } = await dbClient.from('setups').insert([sendData]);
 
             if (error) {
-                alert("Fehler beim Speichern: " + error.message);
+                alert("Database Error: " + error.message);
             } else {
-                alert("Boom! Dein Setup wurde bombensicher gespeichert! 🖥️🔥");
-                
-                document.getElementById('prozessor').value = '';
-                document.getElementById('grafikkarte').value = '';
-                document.getElementById('ram').value = '';
-                document.getElementById('mainboard').value = '';
-                document.getElementById('kuehler').value = '';
-                document.getElementById('festplatte').value = '';
-                document.getElementById('gehaeuse').value = '';
-                document.getElementById('netzteil').value = '';
-                
-                setupsAbrufen();
+                alert(translations[aktuelleSprache].alertSuccess);
+                window.location.reload();
             }
         }
     </script>
-
 </body>
 </html>
