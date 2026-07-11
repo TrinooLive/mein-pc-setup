@@ -273,7 +273,7 @@
         }
         .back-btn:hover { background: #444; }
         
-        /* DYNAMISCHER SHARE BUTTON */
+        /* Teilen-Button im Profil */
         .share-btn {
             display: block;
             width: 100%;
@@ -307,13 +307,42 @@
             margin: 12px 0;
             border-bottom: 1px solid #333;
             padding-bottom: 6px;
+            display: flex; /* Sorgt für sauberes Layout */
+            align-items: flex-start;
         }
         .profil-spec-box .component-line:last-child {
             border-bottom: none;
         }
+        /* BREITE DER LABEL-SPALTE ERHÖHT FÜR LANGE NAMEN */
         .profil-spec-box .component-label {
-            width: 120px;
+            width: 150px; 
+            min-width: 150px;
             color: #00ff88;
+            display: inline-block;
+        }
+
+        /* ADMIN COPY AREA AM ENDE DER SEITE */
+        .admin-copy-container {
+            max-width: 500px;
+            margin: 60px auto 20px auto;
+            padding-top: 20px;
+            border-top: 1px dashed #333;
+        }
+        .admin-copy-btn {
+            background: #222;
+            color: #666;
+            border: 1px solid #333;
+            padding: 10px 15px;
+            font-size: 0.85rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+        .admin-copy-btn:hover {
+            background: #2a2a2a;
+            color: #00ff88;
+            border-color: #00ff88;
         }
     </style>
 </head>
@@ -410,7 +439,6 @@
             <div class="component-line"><span class="component-label">Netzteil:</span> <span id="profilNetzteil" style="color: #ccc;">--</span></div>
         </div>
         
-        <!-- NEUER TEILEN-BUTTON -->
         <button class="share-btn" id="shareBtn" onclick="linkKopieren()">Setup-Link kopieren 📋</button>
     </div>
 
@@ -420,6 +448,11 @@
         <div id="setupsList">
             <p style="color: #666; text-align: center;">Lade Setups aus der Datenbank...</p>
         </div>
+    </div>
+
+    <!-- ADMIN QUELLE-KOPIEREN BUTTON GANZ UNTEN -->
+    <div class="admin-copy-container">
+        <button class="admin-copy-btn" id="adminCopyBtn" onclick="quellcodeKopieren()">➔ Ganzen Quellcode für ChatGPT kopieren 🛠️</button>
     </div>
 
     <!-- DATENBANK-LOGIK -->
@@ -440,18 +473,33 @@
             }
         };
 
-        // Funktion zum automatischen Kopieren der URL in die Zwischenablage
-        function linkKopieren() {
-            // Holt die saubere URL des aktuellen Fensters (inklusive des ?id=X Parameters)
-            const profilUrl = window.location.href;
+        function quellcodeKopieren() {
+            const ganzerCode = document.documentElement.outerHTML;
+            const saubererCode = "<!DOCTYPE html>\n" + ganzerCode;
             
-            // Nutzt die moderne Browser-Clipboard-API zum Schreiben in den Zwischenspeicher
+            navigator.clipboard.writeText(saubererCode).then(() => {
+                const btn = document.getElementById('adminCopyBtn');
+                btn.innerText = "Code kopiert! Bereit für ChatGPT ✓";
+                btn.style.color = "#00ff88";
+                btn.style.borderColor = "#00ff88";
+                
+                setTimeout(() => {
+                    btn.innerText = "➔ Ganzen Quellcode für ChatGPT kopieren 🛠️";
+                    btn.style.color = "#666";
+                    btn.style.borderColor = "#333";
+                }, 2000);
+            }).catch(err => {
+                alert("Fehler beim Kopieren: " + err);
+            });
+        }
+
+        function linkKopieren() {
+            const profilUrl = window.location.href;
             navigator.clipboard.writeText(profilUrl).then(() => {
                 const btn = document.getElementById('shareBtn');
                 btn.innerText = "Link kopiert! ✓";
                 btn.classList.add('copied');
                 
-                // Nach 2 Sekunden wird der Button wieder normal zurückgesetzt
                 setTimeout(() => {
                     btn.innerText = "Setup-Link kopieren 📋";
                     btn.classList.remove('copied');
@@ -537,7 +585,7 @@
             if (error || !data) {
                 document.getElementById('profilTitle').innerText = "Setup nicht gefunden!";
                 document.getElementById('profilMeta').innerText = "Dieser Eintrag existiert leider nicht.";
-                document.getElementById('shareBtn').style.display = 'none'; // Button verstecken bei Fehler
+                document.getElementById('shareBtn').style.display = 'none';
                 return;
             }
 
