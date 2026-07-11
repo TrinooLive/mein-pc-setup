@@ -42,7 +42,7 @@
         /* Container für Login und Formular */
         .setup-container {
             max-width: 500px;
-            margin: 0 auto;
+            margin: 0 auto 40px auto;
             background: #1a1a1a;
             padding: 30px;
             border-radius: 10px;
@@ -174,6 +174,44 @@
             background: #00cc6e;
             box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
         }
+
+        /* Community Liste Bereich */
+        .list-container {
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        .list-container h3 {
+            color: #00ff88;
+            border-bottom: 2px solid #333;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+        .setup-card {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .setup-card-header {
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed #2a2a2a;
+            padding-bottom: 5px;
+        }
+        .component-line {
+            margin: 6px 0;
+            font-size: 0.95rem;
+        }
+        .component-label {
+            color: #aaa;
+            font-weight: bold;
+            display: inline-block;
+            width: 50px;
+        }
     </style>
 </head>
 <body>
@@ -224,13 +262,25 @@
         </div>
     </div>
 
+    <!-- EINGEREICHTE SETUPS LISTE -->
+    <div class="list-container">
+        <h3>🖥️ Eingereichte Community-Setups</h3>
+        <div id="setupsList">
+            <p style="color: #666; text-align: center;">Lade Setups aus der Datenbank...</p>
+        </div>
+    </div>
+
     <!-- DATENBANK-LOGIK -->
     <script>
         const SUPABASE_URL = "https://dvttzclfrfufhjqdyswu.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_2gQmO2ZUVTIio65mbh7Muw_P4OkyA7K";
         
-        // FIX: Variable umbenannt, damit die Bibliothek nicht gecrasht wird
         const dbClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Beim Laden der Seite direkt die vorhandenen Setups holen
+        window.onload = function() {
+            setupsAbrufen();
+        };
 
         function testLogin() {
             document.getElementById('loginSection').style.display = 'none';
@@ -242,6 +292,48 @@
             document.getElementById('loginSection').style.display = 'block';
             document.getElementById('userStatus').style.display = 'none';
             document.getElementById('formArea').classList.remove('unlocked');
+        }
+
+        // Holt alle Setups sortiert nach dem neuesten Eintrag ab
+        async function setupsAbrufen() {
+            const { data, error } = await dbClient
+                .from('setups')
+                .select('*')
+                .order('id', { ascending: false });
+
+            if (error) {
+                document.getElementById('setupsList').innerHTML = `<p style="color: #ff4444;">Fehler beim Laden: ${error.message}</p>`;
+                return;
+            }
+
+            if (!data || data.length === 0) {
+                document.getElementById('setupsList').innerHTML = '<p style="color: #666; text-align: center;">Noch keine Setups eingetragen. Mach den ersten Schritt!</p>';
+                return;
+            }
+
+            // HTML für die Liste generieren
+            let listHtml = '';
+            data.forEach((setup, index) => {
+                // Erstellt ein lesbares Datum
+                const eintragDatum = new Date(setup.created_at).toLocaleString('de-DE', { 
+                    day: '2-digit', 
+                    month: '2-digit', 
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                listHtml += `
+                    <div class="setup-card">
+                        <div class="setup-card-header">💾 Eingereicht am ${eintragDatum} # ${setup.id}</div>
+                        <div class="component-line"><span class="component-label">CPU:</span> ${setup.cpu}</div>
+                        <div class="component-line"><span class="component-label">GPU:</span> ${setup.gpu}</div>
+                        <div class="component-line"><span class="component-label">RAM:</span> ${setup.ram}</div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('setupsList').innerHTML = listHtml;
         }
 
         async function setupAbschicken() {
@@ -260,6 +352,9 @@
                 document.getElementById('prozessor').value = '';
                 document.getElementById('grafikkarte').value = '';
                 document.getElementById('ram').value = '';
+                
+                // Liste sofort aktualisieren, damit das neue Setup direkt unten erscheint
+                setupsAbrufen();
             }
         }
     </script>
