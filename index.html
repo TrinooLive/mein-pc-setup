@@ -7,34 +7,47 @@
     <style>
         :root { --bg: #0b0e14; --card: #151a22; --accent: #9146ff; --text: #ffffff; }
         body { font-family: sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: auto; }
+        .container { max-width: 900px; margin: auto; }
         h1, h2 { color: var(--accent); }
-        .hardware-grid { display: grid; gap: 15px; margin-top: 20px; }
+        .stream-container { margin-bottom: 30px; border: 2px solid var(--accent); background-color: #000; }
+        .hardware-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; }
         .card { background: var(--card); padding: 15px; border-radius: 8px; border: 1px solid #2c364c; }
         a { color: var(--accent); text-decoration: none; font-weight: bold; }
-        .twitch-link { display: inline-block; padding: 10px 20px; background: var(--accent); color: white; border-radius: 5px; margin-bottom: 20px; }
+        a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <h1>Twitch.tv/Trinoo's Setup</h1>
-        <p>Hardware-Nerd & Gaming-Urgestein aus Flensburg.</p>
-        <a href="https://twitch.tv/trinoo" class="twitch-link">Besuche mich auf Twitch</a>
+        
+        <div class="stream-container">
+            <iframe src="https://player.twitch.tv/?channel=trinoo&parent=mein-pc-setup.vercel.app" 
+                    height="400" width="100%" allowfullscreen></iframe>
+        </div>
 
         <h2>Mein Gaming Setup</h2>
         <div class="hardware-grid">
-            <!-- Hier deine Hardware-Einträge -->
-            <div class="card">
-                <strong>Grafikkarte:</strong> NVIDIA RTX 4090 - <a href="#">Link zum Produkt</a>
-            </div>
-            <div class="card">
-                <strong>Prozessor:</strong> AMD Ryzen 9 7950X3D - <a href="#">Link zum Produkt</a>
-            </div>
-            <div class="card">
-                <strong>Maus:</strong> Logitech G Pro X Superlight - <a href="#">Link zum Produkt</a>
-            </div>
-            <!-- Du kannst diese <div class="card">...</div> Blöcke einfach kopieren und anpassen -->
+            <div class="card"><strong>CPU:</strong> <a href="https://amzn.to/4o0S9kM">AMD Ryzen 7 9800X3D</a></div>
+            <div class="card"><strong>CPU Kühler:</strong> <a href="https://amzn.to/42GQicb">Arctic Liquid Freezer III 420 A-RGB</a></div>
+            <div class="card"><strong>GPU:</strong> <a href="https://amzn.to/47qTQSu">MSI GeForce RTX 5080 16G Suprim SOC</a></div>
+            <div class="card"><strong>Mainboard:</strong> <a href="https://amzn.to/42HENBe">MSI MAG X670E Tomahawk WIFI</a></div>
+            <div class="card"><strong>RAM:</strong> <a href="https://amzn.to/4nROl4X">Adata XPG Lancer - 6400 MHz - 64 GB</a></div>
+            <div class="card"><strong>Main Monitor:</strong> <a href="https://amazon.de/dp/B09CD32DNH?tag=twitchtrino0a-21">Asus ROG Strix OLED XG27AQDMGR</a></div>
+            <div class="card"><strong>Side Monitore:</strong> <a href="https://amzn.to/42HEOoM">3x 27" Iiyama Red Eagle G2770QSU</a></div>
+            <div class="card"><strong>Monitorhalterung:</strong> <a href="https://amzn.to/3JfqJs3">Huanuo TS3</a></div>
+            <div class="card"><strong>Soundkarte:</strong> <a href="https://amzn.to/47nmjbP">Creative Sound BlasterX AE-5 Plus</a></div>
+            <div class="card"><strong>Kopfhörer:</strong> <a href="https://amzn.to/4qhYda6">Beyerdynamic DT 990 Pro - 250 Ω</a></div>
+            <div class="card"><strong>Mikrofon:</strong> <a href="https://amzn.to/4vNLmyy">Røde NT-USB+</a></div>
+            <div class="card"><strong>Mikrofonarm:</strong> <a href="https://amzn.to/47s7WTy">InnoGear Boom Arm</a></div>
+            <div class="card"><strong>Maus:</strong> <a href="https://amzn.to/3Pgiij1">Razer Naga V2 Pro</a></div>
+            <div class="card"><strong>Mauspad:</strong> <a href="https://amzn.to/4vlpB8g">CSL - Titanwolf 1200x600mm</a></div>
+            <div class="card"><strong>Tastatur:</strong> <a href="https://amzn.to/4yiOAfl">be quiet! Light Mount</a></div>
+            <div class="card"><strong>Gamepad:</strong> <a href="https://amzn.to/3QXZSol">GameSir Cyclone 2</a></div>
+            <div class="card"><strong>Netzteil:</strong> <a href="https://amzn.to/3KT9PzR">SeaSonic Vertex GX-1200 80+ Gold</a></div>
+            <div class="card"><strong>Tower:</strong> <a href="https://amzn.to/4n3a34P">Be Quiet! Light Base 900 DX</a></div>
+            <div class="card"><strong>Webcam:</strong> <a href="https://amzn.to/4swkEZv">Elgato Facecam 4K</a></div>
+            <div class="card"><strong>Gaming-Stuhl:</strong> <a href="https://amzn.to/3JeVfSO">AKRacing Master Max</a></div>
         </div>
     </div>
 
